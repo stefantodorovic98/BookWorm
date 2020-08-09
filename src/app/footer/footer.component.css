@@ -1,0 +1,15 @@
+mat-toolbar {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: 30px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.author {
+    margin: 0;
+    padding: 0;
+}
