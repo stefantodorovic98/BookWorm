@@ -1,1 +1,89 @@
-<p>register works!</p>
+<mat-card>
+    <mat-card-title>
+        Registracija korisnika
+    </mat-card-title>
+    <form (submit)="onRegister()" [formGroup]="registerForm">
+        <mat-form-field>
+            <mat-label>Ime</mat-label>
+            <input matInput type="text" formControlName="firstname">
+            <mat-error *ngIf="registerForm.get('firstname').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Prezime</mat-label>
+            <input matInput type="text" formControlName="lastname">
+            <mat-error *ngIf="registerForm.get('lastname').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <!--sliku kasnije ubaciti-->
+        <div>
+            <button mat-stroked-button color="primary" type="button" (click)="file.click()">Izaberi sliku profila</button>
+            <input type="file" #file>
+        </div>
+        <mat-form-field>
+            <mat-label>Korisnicko ime</mat-label>
+            <input matInput type="text" formControlName="username">
+            <mat-error *ngIf="registerForm.get('username').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Lozinka</mat-label>
+            <input matInput type="password" formControlName="password">
+            <mat-error *ngIf="registerForm.get('password').errors?.required">
+                Polje mora biti popunjeno!
+            </mat-error>
+            <mat-error *ngIf="registerForm.get('password').errors?.pattern">
+                Nije dobra forma lozinke!
+            </mat-error>
+
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Potvrda lozinke</mat-label>
+            <input matInput type="password" formControlName="passwordConfirmation">
+            <mat-error *ngIf="registerForm.get('passwordConfirmation').errors?.required">
+                Polje mora biti popunjeno!
+            </mat-error>
+            <mat-error *ngIf="registerForm.get('passwordConfirmation').errors?.pattern">
+                Nije dobra forma lozinke!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Datum rodjenja</mat-label>
+            <input matInput [matDatepicker]="myPicker" placeholder="date" formControlName="birthdate" readonly>
+            <mat-datepicker-toggle matSuffix [for]="myPicker"></mat-datepicker-toggle>
+            <mat-datepicker #myPicker></mat-datepicker>
+            <mat-error *ngIf="registerForm.get('birthdate').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Mesto u kojem zivite</mat-label>
+            <input matInput type="text" formControlName="city">
+            <mat-error *ngIf="registerForm.get('city').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Drzava u kojoj zivite</mat-label>
+            <input matInput type="text" formControlName="country">
+            <mat-error *ngIf="registerForm.get('country').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Adresa elektronske poste</mat-label>
+            <input matInput type="text" formControlName="email">
+            <mat-error *ngIf="registerForm.get('email').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-error *ngIf="registerForm.hasError('passError') && registerForm.get('password').dirty && registerForm.get('passwordConfirmation').dirty">
+            Lozinke se ne poklapaju!
+        </mat-error>
+        <button mat-raised-button color="primary" type="submit">Prijavi se</button>
+        <p>{{registerForm.status}}</p>
+    </form>
+</mat-card>

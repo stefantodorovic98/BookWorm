@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +11,13 @@ export class LoginComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onLogin(loginForm: NgForm) {
+    if(loginForm.invalid) {
+      return;
+    }
+    alert(loginForm.value.username + " " + loginForm.value.password);
   }
 
 }

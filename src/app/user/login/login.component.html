@@ -1,5 +1,23 @@
-<form class="login">
-    <input type="text"><br>
-    <input type="text"><br>
-    <button>Pritisni</button>
-</form>
+<mat-card>
+    <mat-card-title color="primary">
+        Prijava korisnika
+    </mat-card-title>
+    <form (submit)="onLogin(loginForm)" #loginForm="ngForm">
+        <mat-form-field>
+            <mat-label>Korisnicko ime</mat-label>
+            <input matInput type="text" name="username" ngModel required #username="ngModel">
+            <mat-error *ngIf="username.invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Lozinka</mat-label>
+            <input matInput type="password" name="password" ngModel required #password="ngModel">
+            <mat-error *ngIf="password.invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Prijavi se</button>
+        <a mat-button color="warn">Zaboravljena lozinka</a>
+    </form>
+</mat-card>
