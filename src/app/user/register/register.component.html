@@ -80,10 +80,12 @@
                 Polje mora biti popunjeno!
             </mat-error>
         </mat-form-field>
+        <ngx-recaptcha2 #captchaElem [siteKey]="siteKey" formControlName="captcha">
+        </ngx-recaptcha2>
         <mat-error *ngIf="registerForm.hasError('passError') && registerForm.get('password').dirty && registerForm.get('passwordConfirmation').dirty">
             Lozinke se ne poklapaju!
         </mat-error>
-        <button mat-raised-button color="primary" type="submit">Prijavi se</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">Prijavi se</button>
         <p>{{registerForm.status}}</p>
     </form>
 </mat-card>

@@ -22,6 +22,8 @@ import { RegisterComponent } from './user/register/register.component';
 import { FooterComponent } from './footer/footer.component';
 import { ListBooksComponent } from './books/list-books/list-books.component';
 
+import { NgxCaptchaModule } from 'ngx-captcha';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +46,8 @@ import { ListBooksComponent } from './books/list-books/list-books.component';
     MatCardModule,
     MatDatepickerModule,
     MatIconModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NgxCaptchaModule
   ],
   providers: [],
   bootstrap: [AppComponent]
