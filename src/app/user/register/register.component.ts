@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { passwordCheckValidator } from './password.validator';
+import { ImageCheckValidator } from './image.validator';
 
 @Component({
   selector: 'app-register',
@@ -13,6 +14,11 @@ export class RegisterComponent implements OnInit {
   message: string;
 
   siteKey: string;
+  preview: string;
+
+  extensions: string[] = [
+    "jpg", "jpeg", "png"
+  ];
 
   //secret key 6LcIPr0ZAAAAAFF91uT5mkpzK05cLU75tIn7A28O
   constructor() {
@@ -30,7 +36,8 @@ export class RegisterComponent implements OnInit {
       city: new FormControl(null, [Validators.required]),
       country: new FormControl(null, [Validators.required]),
       email: new FormControl(null, [Validators.required, Validators.email]),
-      captcha: new FormControl(null, [Validators.required])
+      captcha: new FormControl(null, [Validators.required]),
+      image: new FormControl(null,[ImageCheckValidator(this.extensions)])
     }, {validators: passwordCheckValidator});
 
   }
@@ -38,6 +45,17 @@ export class RegisterComponent implements OnInit {
   onRegister() {
     if(this.registerForm.invalid) return;
     alert(this.registerForm.get("birthdate").value)
+  }
+
+  onImagePicked(event: Event){
+    const file = (event.target as HTMLInputElement).files[0];
+    this.registerForm.patchValue({image: file});
+    this.registerForm.get('image').updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.preview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 
 }

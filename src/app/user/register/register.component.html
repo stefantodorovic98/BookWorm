@@ -20,7 +20,11 @@
         <!--sliku kasnije ubaciti-->
         <div>
             <button mat-stroked-button color="primary" type="button" (click)="file.click()">Izaberi sliku profila</button>
-            <input type="file" #file>
+            <input type="file" #file (change)="onImagePicked($event)" accept=".png, .jpg, .jpeg, .gif">
+        </div>
+        <div class="image-preview" *ngIf="preview !== '' && preview &&
+         registerForm.get('image').valid">
+            <img [src]="preview" [alt]="registerForm.value.title">
         </div>
         <mat-form-field>
             <mat-label>Korisnicko ime</mat-label>
