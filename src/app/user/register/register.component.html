@@ -20,7 +20,8 @@
         <!--sliku kasnije ubaciti-->
         <div>
             <button mat-stroked-button color="primary" type="button" (click)="file.click()">Izaberi sliku profila</button>
-            <input type="file" #file (change)="onImagePicked($event)" accept=".png, .jpg, .jpeg, .gif">
+            <input type="file" #file (change)="onImagePicked($event)" accept=".png, .jpg, .jpeg">
+            <button mat-stroked-button color="primary" type="button" (click)="onDefault()">Ponisti</button>
         </div>
         <div class="image-preview" *ngIf="preview !== '' && preview &&
          registerForm.get('image').valid">
@@ -88,6 +89,9 @@
         </ngx-recaptcha2>
         <mat-error *ngIf="registerForm.hasError('passError') && registerForm.get('password').dirty && registerForm.get('passwordConfirmation').dirty">
             Lozinke se ne poklapaju!
+        </mat-error>
+        <mat-error *ngIf="message!=null">
+            {{message}}
         </mat-error>
         <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">Prijavi se</button>
         <p>{{registerForm.status}}</p>

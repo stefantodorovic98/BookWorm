@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +24,8 @@ import { FooterComponent } from './footer/footer.component';
 import { ListBooksComponent } from './books/list-books/list-books.component';
 
 import { NgxCaptchaModule } from 'ngx-captcha';
+
+
 
 @NgModule({
   declarations: [
@@ -47,7 +50,8 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     MatDatepickerModule,
     MatIconModule,
     MatNativeDateModule,
-    NgxCaptchaModule
+    NgxCaptchaModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

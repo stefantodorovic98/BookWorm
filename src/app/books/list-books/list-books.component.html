@@ -1,6 +1,18 @@
-<mat-form-field>
-    <mat-label>Date</mat-label>
-    <input matInput [matDatepicker]="myPicker" placeholder="date">
-    <mat-datepicker-toggle matSuffix [for]="myPicker"></mat-datepicker-toggle>
-    <mat-datepicker #myPicker></mat-datepicker>
-</mat-form-field>
+<div>
+    <ul *ngFor='let user of users'>
+        <li>
+            {{user._id}} {{user.ime}} {{user.prezime}}
+        </li>
+    </ul>
+</div>
+
+
+<form (submit)="dodaj(loginForm)" #loginForm="ngForm">
+    <input type="text" name="ime" ngModel #ime="ngModel">
+    <input type="text" name="prezime" ngModel #prezime="ngModel">
+    <button>Dodaj</button>
+</form>
+
+<span>
+  {{message}}
+</span>
