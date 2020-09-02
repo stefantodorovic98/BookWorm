@@ -1,8 +1,11 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const path = require("path");
 
 const userRoutes = require("./routes/users");
+
+const books = require("./routes/books");
 
 const app = express();
 
@@ -16,6 +19,8 @@ mongoose.connect("mongodb+srv://stefan:2f6ZujtBhKTSvtqS@cluster0.hmsch.mongodb.n
 
 app.use(bodyParser.json());
 
+app.use("/images/bookImages", express.static(path.join("backend/images/bookImages")));
+
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers",
@@ -26,5 +31,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/user", userRoutes);
+
+app.use("/api/books", books);
 
 module.exports = app;

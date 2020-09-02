@@ -19,7 +19,6 @@ export class UserService {
   registerUser(firstname:string, lastname:string, username:string, password:string,
      birthdate:Date, city: string, country:string, email:string, image: File){
        if(image!=null){
-        let poruka: string = "Greska";
         const userData = new FormData();
         userData.append("firstname", firstname);
         userData.append("lastname", lastname);
@@ -40,7 +39,7 @@ export class UserService {
         const user: User = {
           _id:null, firstname:firstname, lastname:lastname, username:username, password:password,
           birthdate:birthdate, city:city, country:country, email:email, imagePath:null
-        }
+        };
         this.http.post<{message:string}>('http://localhost:3000/api/user/signupNoImage', user)
           .subscribe((responseData) => {
             this.userMessageListener.next(responseData.message);

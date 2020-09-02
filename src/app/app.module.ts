@@ -16,14 +16,19 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatNativeDateModule } from "@angular/material/core";
+import { MatListModule } from "@angular/material/list";
+import { MatSelectModule } from "@angular/material/select";
+import { MatTableModule } from "@angular/material/table";
 
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { FooterComponent } from './footer/footer.component';
-import { ListBooksComponent } from './books/list-books/list-books.component';
 
 import { NgxCaptchaModule } from 'ngx-captcha';
+import { ForgottenPasswordComponent } from './user/forgotten-password/forgotten-password.component';
+import { BookListComponent } from './books/book-list/book-list.component';
+import { BookAddComponent } from './books/book-add/book-add.component';
 
 
 
@@ -34,7 +39,9 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     LoginComponent,
     RegisterComponent,
     FooterComponent,
-    ListBooksComponent
+    ForgottenPasswordComponent,
+    BookListComponent,
+    BookAddComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +56,10 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     MatCardModule,
     MatDatepickerModule,
     MatIconModule,
+    MatSelectModule,
     MatNativeDateModule,
+    MatListModule,
+    MatTableModule,
     NgxCaptchaModule,
     HttpClientModule
   ],

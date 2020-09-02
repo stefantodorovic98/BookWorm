@@ -1,0 +1,33 @@
+mat-card {
+    width: 60%;
+    margin: 20px auto;
+}
+
+mat-card-title {
+    text-align: center;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+input[type="file"] {
+    visibility: hidden;
+}
+
+.captcha {
+    width: auto;
+}
+
+.image-preview {
+    height: 5rem;
+    margin: 1rem 0;
+}
+
+.image-preview img {
+    height: 100%;
+}

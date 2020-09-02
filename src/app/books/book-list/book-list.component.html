@@ -1,0 +1,62 @@
+<mat-card>
+    <mat-card-title color="primary">
+        Trazi knjigu
+    </mat-card-title>
+    <form (submit)="find()" [formGroup]="findForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Naslov</mat-label>
+            <input matInput type="text" formControlName="title">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Autor</mat-label>
+            <input matInput type="text" formControlName="author">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Odaberite zanrove (maksimalno 3 moguca)</mat-label>
+            <mat-select disableRipple multiple formControlName="genres" (selectionChange)="changed()">
+                <mat-option value="Avantura">Avantura</mat-option>
+                <mat-option value="Komedija">Komedija</mat-option>
+                <mat-option value="Tragedija">Tragedija</mat-option>
+                <mat-option value="Drama">Drama</mat-option>
+                <mat-option value="Krimi">Krimi</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Trazi</button>
+    </form>
+</mat-card>
+<mat-table [dataSource]="books" class="mat-elevation-z8">
+    <!-- Position Column -->
+    <ng-container matColumnDef="title">
+        <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="authors">
+        <mat-header-cell *matHeaderCellDef> Autori </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.authors}} </mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="issueDate">
+        <mat-header-cell *matHeaderCellDef> Datum izdavanja </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.issueDate}} </mat-cell>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="genres">
+        <mat-header-cell *matHeaderCellDef> Zanrovi </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.genres}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="path">
+        <mat-header-cell *matHeaderCellDef> Slika</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <div class="image"><img [src]="element.imagePath" /> </div>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+</mat-table>

@@ -3,12 +3,17 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { RegisterComponent } from './user/register/register.component';
 import { LoginComponent } from './user/login/login.component';
-import { ListBooksComponent } from './books/list-books/list-books.component';
+import { ForgottenPasswordComponent } from './user/forgotten-password/forgotten-password.component';
+import { BookListComponent } from './books/book-list/book-list.component';
+import { BookAddComponent } from './books/book-add/book-add.component';
 
 const routes: Routes = [
   {path:"", component:LoginComponent},
+  {path:"login", component:LoginComponent},
   {path:"register", component:RegisterComponent},
-  {path:"books", component:ListBooksComponent}
+  {path:"forgottenPassword", component: ForgottenPasswordComponent},
+  {path:"bookList", component: BookListComponent},
+  {path:"bookAdd", component: BookAddComponent}
 ];
 
 @NgModule({

@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 
 const RegisterRequest = require('../models/user');
-const { profile } = require("console");
 
 const router = express.Router();
 
@@ -86,6 +85,11 @@ router.post("/signupNoImage", (req, res, next) => {
                 });
         });
 });
+
+router.post("/resetPassword", (req, res, next) => {
+
+});
+
 
 
 router.get("/get", (req, res, next) => {
