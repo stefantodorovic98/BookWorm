@@ -29,6 +29,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
 import { ForgottenPasswordComponent } from './user/forgotten-password/forgotten-password.component';
 import { BookListComponent } from './books/book-list/book-list.component';
 import { BookAddComponent } from './books/book-add/book-add.component';
+import { BookInfoComponent } from './books/book-info/book-info.component';
 
 
 
@@ -41,7 +42,8 @@ import { BookAddComponent } from './books/book-add/book-add.component';
     FooterComponent,
     ForgottenPasswordComponent,
     BookListComponent,
-    BookAddComponent
+    BookAddComponent,
+    BookInfoComponent
   ],
   imports: [
     BrowserModule,

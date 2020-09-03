@@ -1,0 +1,56 @@
+mat-card {
+    width: 60%;
+    margin: 20px auto;
+    background-color: rgba(193, 66, 66, 0.7);
+    color: white;
+}
+
+mat-card-title {
+    text-align: center;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+table {
+    width: 100%;
+}
+
+.content {
+    width: 75%;
+}
+
+.first {
+    width: 33%;
+    text-align: center;
+}
+
+.second {
+    width: 67%;
+    text-align: center;
+}
+
+.containter {
+    vertical-align: middle;
+    text-align: center;
+    width: 25%;
+}
+
+.container img {
+    display: block;
+    margin: 0 auto;
+}
+
+.description {
+    width: 100%;
+}
+
+.image-preview {
+    height: 10rem;
+    margin: 1rem 0;
+}
+
+.image-preview img {
+    height: 100%;
+}

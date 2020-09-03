@@ -17,7 +17,7 @@ export class BookListComponent implements OnInit {
 
   public books: Book[] = [];
   private bookListSub: Subscription;
-  displayedColumns: string[] = ['title', 'authors', 'issueDate', 'genres', 'path'];
+  displayedColumns: string[] = ['title', 'authors', 'genres', 'path', 'bookInfo'];
   genres: string[] = [];
   findForm: FormGroup;
 

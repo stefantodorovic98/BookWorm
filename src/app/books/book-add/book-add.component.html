@@ -22,8 +22,8 @@
             <mat-label>Dodaj autora</mat-label>
             <input matInput type="text" formControlName="author">
             <button mat-button type="button" *ngIf="bookAddForm.get('author').value!='' && bookAddForm.get('author').value!=null" matSuffix mat-icon-button aria-label="Add" (click)="addAuthor(bookAddForm.get('author').value)">
-            <mat-icon>library_add</mat-icon>
-        </button>
+                <mat-icon>library_add</mat-icon>
+            </button>
         </mat-form-field>
         <mat-list *ngIf="authors.length>0" formControlName="authorList">
             <div mat-subheader>Autori</div>

@@ -12,9 +12,14 @@ export class BookService {
   constructor(private http:HttpClient) { }
 
   private bookListListener = new Subject<Book[]>();
+  private bookListener = new Subject<Book>();
 
   getBookListListener(){
     return this.bookListListener.asObservable();
+  }
+
+  getBookListener(){
+    return this.bookListener.asObservable();
   }
 
   getBooks(){
@@ -57,6 +62,13 @@ export class BookService {
     this.http.post<{message:string, data: Book[]}>('http://localhost:3000/api/books/findBooks',obj)
     .subscribe((responseData) => {
       this.bookListListener.next([...responseData.data]);
+    });
+  }
+
+  getBook(id:number){
+    this.http.get<{message:string, data: Book}>('http://localhost:3000/api/books/getBook/'+id)
+    .subscribe((responseData) => {
+      this.bookListener.next({...responseData.data});
     });
   }
 

@@ -1,0 +1,57 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Informacije o knjizi</mat-card-title>
+    </mat-card-header>
+    <table>
+        <tr>
+            <td class="image-preview container">
+                <img [src]="book.imagePath" [alt]="book.title" class="image-preview image">
+            </td>
+            <td class="content">
+                <table class="content-table">
+                    <tr>
+                        <td class="first">
+                            <h2>Naslov</h2>
+                        </td>
+                        <td class="second">
+                            <h2>{{book.title}}</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="first">
+                            <h2>Autori</h2>
+                        </td>
+                        <td class="second">
+                            <h2>{{book.authors}}</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="first">
+                            <h2>Zanrovi</h2>
+                        </td>
+                        <td class="second">
+                            <h2>
+                                {{book.genres}}
+                            </h2>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>
+                <h2>Kratak opis knjige</h2>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h3>
+                    {{book.description}}
+                </h3>
+            </td>
+        </tr>
+    </table>
+</mat-card>

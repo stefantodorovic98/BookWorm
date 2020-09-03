@@ -37,13 +37,6 @@
         <mat-cell *matCellDef="let element"> {{element.authors}} </mat-cell>
     </ng-container>
 
-    <!-- Weight Column -->
-    <ng-container matColumnDef="issueDate">
-        <mat-header-cell *matHeaderCellDef> Datum izdavanja </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.issueDate}} </mat-cell>
-    </ng-container>
-
-    <!-- Symbol Column -->
     <ng-container matColumnDef="genres">
         <mat-header-cell *matHeaderCellDef> Zanrovi </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.genres}} </mat-cell>
@@ -53,6 +46,15 @@
         <mat-header-cell *matHeaderCellDef> Slika</mat-header-cell>
         <mat-cell *matCellDef="let element">
             <div class="image"><img [src]="element.imagePath" /> </div>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="bookInfo">
+        <mat-header-cell *matHeaderCellDef> Link </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <a mat-button [routerLink]="['/bookInfo',element._id]">
+                <mat-icon>info</mat-icon>
+            </a>
         </mat-cell>
     </ng-container>
 

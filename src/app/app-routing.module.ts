@@ -6,6 +6,7 @@ import { LoginComponent } from './user/login/login.component';
 import { ForgottenPasswordComponent } from './user/forgotten-password/forgotten-password.component';
 import { BookListComponent } from './books/book-list/book-list.component';
 import { BookAddComponent } from './books/book-add/book-add.component';
+import { BookInfoComponent } from './books/book-info/book-info.component';
 
 const routes: Routes = [
   {path:"", component:LoginComponent},
@@ -13,7 +14,8 @@ const routes: Routes = [
   {path:"register", component:RegisterComponent},
   {path:"forgottenPassword", component: ForgottenPasswordComponent},
   {path:"bookList", component: BookListComponent},
-  {path:"bookAdd", component: BookAddComponent}
+  {path:"bookAdd", component: BookAddComponent},
+  {path:"bookInfo/:id", component: BookInfoComponent}
 ];
 
 @NgModule({

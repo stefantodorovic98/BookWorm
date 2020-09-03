@@ -129,4 +129,14 @@ router.post("/findBooks", (req, res, next) => {
         });
 });
 
+router.get("/getBook/:id", (req, res, next) => {
+    BookRequest.findById(req.params.id)
+        .then(book => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: book
+            });
+        });
+});
+
 module.exports = router;
