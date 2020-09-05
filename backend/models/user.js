@@ -10,9 +10,11 @@ const userSchema = mongoose.Schema({
     birthdate: { type: String, required: true },
     city: { type: String, required: true },
     country: { type: String, required: true },
-    email: { type: String, required: true, unique: true }
+    email: { type: String, required: true, unique: true },
+    privilege: { type: String, required: true }
 });
 
 userSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('RegisterRequest', userSchema);
+module.exports = mongoose.model('RegisteredUser', userSchema);

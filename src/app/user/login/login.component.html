@@ -17,6 +17,9 @@
                 Polje mora biti popunjeno!
             </mat-error>
         </mat-form-field>
+        <mat-error *ngIf="message!=null">
+            {{message}}
+        </mat-error>
         <button mat-raised-button color="primary" type="submit">Prijavi se</button>
         <a mat-button color="warn" class="password" routerLink="/forgottenPassword">Zaboravljena lozinka</a>
     </form>

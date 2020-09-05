@@ -1,0 +1,75 @@
+<mat-card>
+    <table>
+        <tr>
+            <td>
+                <mat-card-header>
+                    <mat-card-title>Informacije o korisniku</mat-card-title>
+                </mat-card-header>
+            </td>
+            <td>
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="configureUser()">
+                  <mat-icon>build</mat-icon>
+                </button>
+            </td>
+        </tr>
+    </table>
+    <table *ngIf="user">
+        <tr>
+            <td class="image-preview container">
+                <img [src]="user.imagePath" [alt]="user.username" class="image-preview image">
+            </td>
+            <td class="content">
+                <table class="content-table">
+                    <tr>
+                        <td class="first">
+                            <h2>Ime i prezime</h2>
+                        </td>
+                        <td class="second">
+                            <h2>{{user.firstname}} {{user.lastname}}</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="first">
+                            <h2>Datum rodjenja</h2>
+                        </td>
+                        <td class="second">
+                            <h2>{{user.birthdate}}</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="first">
+                            <h2>Grad</h2>
+                        </td>
+                        <td class="second">
+                            <h2>
+                                {{user.city}}
+                            </h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="first">
+                            <h2>Drzava</h2>
+                        </td>
+                        <td class="second">
+                            <h2>
+                                {{user.country}}
+                            </h2>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center">
+                <button mat-raised-button color="primary" type="button">Promeni sliku</button>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td style="text-align:center">
+                <button mat-raised-button color="primary" type="button" (click)="changePassword()">Promeni lozinku</button>
+            </td>
+        </tr>
+    </table>
+</mat-card>

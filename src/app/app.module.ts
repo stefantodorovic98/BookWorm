@@ -30,6 +30,10 @@ import { ForgottenPasswordComponent } from './user/forgotten-password/forgotten-
 import { BookListComponent } from './books/book-list/book-list.component';
 import { BookAddComponent } from './books/book-add/book-add.component';
 import { BookInfoComponent } from './books/book-info/book-info.component';
+import { UserInfoComponent } from './user/user-info/user-info.component';
+import { UserConfigureComponent } from './user/user-configure/user-configure.component';
+import { ChangePasswordComponent } from './user/change-password/change-password.component';
+import { NewPasswordComponent } from './user/new-password/new-password.component';
 
 
 
@@ -43,7 +47,11 @@ import { BookInfoComponent } from './books/book-info/book-info.component';
     ForgottenPasswordComponent,
     BookListComponent,
     BookAddComponent,
-    BookInfoComponent
+    BookInfoComponent,
+    UserInfoComponent,
+    UserConfigureComponent,
+    ChangePasswordComponent,
+    NewPasswordComponent
   ],
   imports: [
     BrowserModule,

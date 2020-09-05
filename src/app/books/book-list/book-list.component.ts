@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Book } from "../models/book.model";
 
@@ -11,7 +11,7 @@ import { FormGroup, FormControl } from '@angular/forms';
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.css']
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent implements OnInit, OnDestroy {
 
   constructor(private service: BookService) { }
 
@@ -33,6 +33,10 @@ export class BookListComponent implements OnInit {
         this.books = this.niceOutput(this.books);
       });
       this.service.getBooks();
+  }
+
+  ngOnDestroy(): void {
+    this.bookListSub.unsubscribe();
   }
 
   niceOutput(books:Book[]):Book[]{

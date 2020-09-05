@@ -20,13 +20,14 @@ mongoose.connect("mongodb+srv://stefan:2f6ZujtBhKTSvtqS@cluster0.hmsch.mongodb.n
 app.use(bodyParser.json());
 
 app.use("/images/bookImages", express.static(path.join("backend/images/bookImages")));
+app.use("/images/profileImages", express.static(path.join("backend/images/profileImages")));
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept");
     res.setHeader("Access-Control-AlLow-Methods",
-        "GET, POST, PATCH, DELETE, OPTIONS");
+        "GET, POST, PATCH, PUT, DELETE, OPTIONS");
     next();
 });
 

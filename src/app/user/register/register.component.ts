@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { passwordCheckValidator } from './password.validator';
 import { ImageCheckValidator } from './image.validator';
@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 
   registerForm: FormGroup;
   message: string = " ";
@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
     "jpg", "jpeg", "png"
   ];
 
-  private userMessageSub : Subscription;
+  private userRegisterSub : Subscription;
 
   //secret key 6LcIPr0ZAAAAAFF91uT5mkpzK05cLU75tIn7A28O
   constructor(private service: UserService) {
@@ -47,10 +47,14 @@ export class RegisterComponent implements OnInit {
       captcha: new FormControl(null, [Validators.required]),
       image: new FormControl(null,[ImageCheckValidator(this.extensions)])
     }, {validators: passwordCheckValidator});
-    this.userMessageSub = this.service.getUserMessageListener()
+    this.userRegisterSub = this.service.getUserRegisterListener()
       .subscribe((message)=>{
         this.message = message;
       });
+  }
+
+  ngOnDestroy(): void {
+    this.userRegisterSub.unsubscribe();
   }
 
   onRegister() {

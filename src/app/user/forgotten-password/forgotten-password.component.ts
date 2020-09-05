@@ -1,20 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NgForm, FormGroup, Validators, FormControl } from '@angular/forms';
+import { UserService } from '../user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-forgotten-password',
   templateUrl: './forgotten-password.component.html',
   styleUrls: ['./forgotten-password.component.css']
 })
-export class ForgottenPasswordComponent implements OnInit {
+export class ForgottenPasswordComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  resetPasswordForm: FormGroup;
+  message: string = " ";
+  resetPasswordSub: Subscription;
+
+  constructor(private service: UserService) { }
 
   ngOnInit(): void {
+    this.resetPasswordForm = new FormGroup({
+      email: new FormControl(null, [Validators.required, Validators.email]),
+    });
+    this.resetPasswordSub = this.service.getResetPasswordListener()
+      .subscribe(response => {
+        this.message = response;
+      });
   }
 
-  onResetPassword(form: NgForm){
-    alert(form.value.email)
+  ngOnDestroy(): void {
+    this.resetPasswordSub.unsubscribe();
+  }
+
+
+  onResetPassword(){
+    if(this.resetPasswordForm.invalid) return;
+    this.service.resetPassword(this.resetPasswordForm.value.email)
   }
 
 }

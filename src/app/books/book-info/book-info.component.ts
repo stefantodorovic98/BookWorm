@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Book } from '../models/book.model';
 import { BookService } from '../book.service';
@@ -9,23 +9,25 @@ import { Subscription } from 'rxjs';
   templateUrl: './book-info.component.html',
   styleUrls: ['./book-info.component.css']
 })
-export class BookInfoComponent implements OnInit {
+export class BookInfoComponent implements OnInit, OnDestroy {
+
+  book: Book;
+  private bookSub: Subscription;
 
   constructor(private service: BookService, private route: ActivatedRoute) { }
 
-  id: number;
-  book: Book;
-  private bookSub: Subscription;
-  displayedColumns: string[] = ['title', 'image'];
-
   ngOnInit(): void {
-    this.id = this.route.snapshot.params.id;
+    let id = this.route.snapshot.params.id;
     this.bookSub = this.service.getBookListener()
       .subscribe((data) => {
         this.book = data;
         this.book = this.niceOutput(this.book);
       });
-    this.service.getBook(this.id);
+    this.service.getBook(id);
+  }
+
+  ngOnDestroy(): void {
+    this.bookSub.unsubscribe();
   }
 
   niceOutput(book:Book):Book{

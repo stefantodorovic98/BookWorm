@@ -29,6 +29,8 @@
         "mongoose-unique-validator": "^2.0.3",
         "multer": "^1.4.2",
         "ngx-captcha": "^8.0.1",
+        "nodemailer": "^6.4.11",
+        "nodemailer-smtp-transport": "^2.7.4",
         "rxjs": "~6.5.5",
         "tslib": "^2.0.0",
         "zone.js": "~0.10.3"

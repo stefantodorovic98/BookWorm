@@ -1,0 +1,48 @@
+<mat-card>
+    <mat-card-title>
+        Promena podataka
+    </mat-card-title>
+    <form (submit)="onUserConfigure()" [formGroup]="configureForm">
+        <mat-form-field>
+            <mat-label>Ime</mat-label>
+            <input matInput type="text" formControlName="firstname">
+            <mat-error *ngIf="configureForm.get('firstname').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Prezime</mat-label>
+            <input matInput type="text" formControlName="lastname">
+            <mat-error *ngIf="configureForm.get('lastname').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Datum rodjenja</mat-label>
+            <input matInput [matDatepicker]="myPicker" placeholder="date" formControlName="birthdate" readonly>
+            <mat-datepicker-toggle matSuffix [for]="myPicker"></mat-datepicker-toggle>
+            <mat-datepicker #myPicker></mat-datepicker>
+            <mat-error *ngIf="configureForm.get('birthdate').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Mesto u kojem zivite</mat-label>
+            <input matInput type="text" formControlName="city">
+            <mat-error *ngIf="configureForm.get('city').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Drzava u kojoj zivite</mat-label>
+            <input matInput type="text" formControlName="country">
+            <mat-error *ngIf="configureForm.get('country').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-error *ngIf="message!=null">
+            {{message}}
+        </mat-error>
+        <button mat-raised-button color="primary" type="submit">Sacuvaj</button>
+    </form>
+</mat-card>

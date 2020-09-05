@@ -1,24 +1,59 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { User } from './models/user.model';
+import { Auth } from './models/auth.model';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { LoggedUser } from './models/loggedUser.model';
+import { ConfiguredUser } from './models/configuredUser.model';
+import { ChangedPassword } from './models/changedPassword.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
-  private userMessageListener = new Subject<string>();
+  private userRegisterListener = new Subject<string>();
+  private userLoginListener = new Subject<string>();
+  private userListener = new Subject<User>();
+  private userConfigureListener = new Subject<string>();
+  private changePasswordListener = new Subject<string>();
+  private resetPasswordListener = new Subject<string>();
+  private newPasswordListener = new Subject<string>();
 
-  getUserMessageListener(){
-    return this.userMessageListener.asObservable();
+  getUserRegisterListener(){
+    return this.userRegisterListener.asObservable();
+  }
+
+  getUserLoginListener(){
+    return this.userLoginListener.asObservable();
+  }
+
+  getUserListener(){
+    return this.userListener.asObservable();
+  }
+
+  getUserConfigureListener(){
+    return this.userConfigureListener.asObservable();
+  }
+
+  getChangePasswordListener(){
+    return this.changePasswordListener.asObservable();
+  }
+
+  getResetPasswordListener(){
+    return this.resetPasswordListener.asObservable();
+  }
+
+  getNewPasswordListener(){
+    return this.newPasswordListener.asObservable();
   }
 
   registerUser(firstname:string, lastname:string, username:string, password:string,
      birthdate:Date, city: string, country:string, email:string, image: File){
-       if(image!=null){
+      if(image!=null){
         const userData = new FormData();
         userData.append("firstname", firstname);
         userData.append("lastname", lastname);
@@ -31,9 +66,9 @@ export class UserService {
         userData.append("image", image, image.name);
         this.http.post<{message:string}>('http://localhost:3000/api/user/signupImage', userData)
          .subscribe((responseData) => {
-           this.userMessageListener.next(responseData.message);
+           this.userRegisterListener.next(responseData.message);
          }, error => {
-           this.userMessageListener.next(error.error.message);
+           this.userRegisterListener.next(error.error.message);
          });
        }else if(image==null){
         const user: User = {
@@ -42,10 +77,91 @@ export class UserService {
         };
         this.http.post<{message:string}>('http://localhost:3000/api/user/signupNoImage', user)
           .subscribe((responseData) => {
-            this.userMessageListener.next(responseData.message);
+            this.userRegisterListener.next(responseData.message);
           }, error => {
-            this.userMessageListener.next(error.error.message);
+            this.userRegisterListener.next(error.error.message);
           });
        }
      }
+
+  loginUser(username: string, password: string){
+    let auth : Auth = {
+      username: username, password: password
+    };
+    this.http.post<{message:string, _id:number, privilege:string}>('http://localhost:3000/api/user/login', auth)
+      .subscribe((response) => {
+        let loggedUser: LoggedUser = {
+          _id:response._id, privilege:response.privilege
+        }
+        localStorage.setItem("logged",JSON.stringify(loggedUser));
+        this.userLoginListener.next(response.message);
+        this.router.navigate(['/userInfo',response._id]);
+      }, error => {
+        this.userLoginListener.next(error.error.message);
+      });
+  }
+
+  getUser(id:number){
+    this.http.get<{message:string, data: User}>('http://localhost:3000/api/user/getUser/'+id)
+      .subscribe((responseData) => {
+        this.userListener.next({...responseData.data});
+      });
+  }
+
+  configureUser(id: number, firstname: string, lastname:string, birthDate: Date, city: string, country: string){
+    let configuredUser : ConfiguredUser = {
+      firstname: firstname, lastname: lastname, birthdate: birthDate, city: city, country: country
+    }
+    this.http.put<{message:string}>('http://localhost:3000/api/user/updateUser/'+id, configuredUser)
+    .subscribe(response => {
+      this.userConfigureListener.next(response.message);
+      this.router.navigate(['/userInfo', id]);
+    }, error => {
+      this.userConfigureListener.next(error.error.message);
+    });
+  }
+
+  changePassword(id: number, oldPassword: string, newPassword: string){
+    if(oldPassword===newPassword){
+      this.changePasswordListener.next("Nova lozinka je ista kao stara!");
+    }else {
+      let temp:ChangedPassword = {
+        oldPassword: oldPassword, newPassword:newPassword
+      };
+      this.http.put<{message:string}>('http://localhost:3000/api/user/changePassword/'+id, temp)
+        .subscribe(response => {
+          localStorage.removeItem("logged");
+          this.changePasswordListener.next(response.message);
+          this.router.navigate(['/']);
+        }, error => {
+          this.changePasswordListener.next(error.error.message);
+        });
+    }
+  }
+
+  resetPassword(email: string){
+    this.http.get<{message:string, id:number }>('http://localhost:3000/api/user/resetPassword/' + email)
+      .subscribe(response => {
+        this.resetPasswordListener.next(response.message);
+      }, error => {
+        this.resetPasswordListener.next(error.error.message);
+      });
+  }
+
+  sendNewPassword(id:number, password: string){
+    let auth : Auth = {
+      username: null, password: password
+    };
+    this.http.put<{message:string, _id:number, privilege:string}>('http://localhost:3000/api/user/newPassword/'+id,auth)
+    .subscribe((response) => {
+      let loggedUser: LoggedUser = {
+        _id:response._id, privilege:response.privilege
+      }
+      localStorage.setItem("logged",JSON.stringify(loggedUser));
+      this.newPasswordListener.next(response.message);
+      this.router.navigate(['/userInfo',response._id]);
+    }, error => {
+      this.newPasswordListener.next(error.error.message);
+    });
+  }
 }
