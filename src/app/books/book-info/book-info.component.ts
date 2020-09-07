@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Book } from '../models/book.model';
 import { BookService } from '../book.service';
 import { Subscription } from 'rxjs';
+import { LoggedUser } from 'src/app/user/models/loggedUser.model';
+import { UserService } from 'src/app/user/user.service';
 
 @Component({
   selector: 'app-book-info',
@@ -13,17 +15,22 @@ export class BookInfoComponent implements OnInit, OnDestroy {
 
   book: Book;
   private bookSub: Subscription;
+  loggedUser: LoggedUser;
+  privilege: string = "";
+  id:number;
 
-  constructor(private service: BookService, private route: ActivatedRoute) { }
+  constructor(private bookService: BookService, private userService: UserService ,private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    let id = this.route.snapshot.params.id;
-    this.bookSub = this.service.getBookListener()
+    this.loggedUser = this.userService.whoIsLogged();
+    if(this.loggedUser) this.privilege = this.loggedUser.privilege;
+    this.id = this.route.snapshot.params.id;
+    this.bookSub = this.bookService.getBookListener()
       .subscribe((data) => {
         this.book = data;
         this.book = this.niceOutput(this.book);
       });
-    this.service.getBook(id);
+    this.bookService.getBook(this.id);
   }
 
   ngOnDestroy(): void {
@@ -46,6 +53,10 @@ export class BookInfoComponent implements OnInit, OnDestroy {
       }
       book.genres = g;
       return book;
+  }
+
+  configureBook(){
+      this.router.navigate(['/bookConfigure', this.id]);
   }
 
 }

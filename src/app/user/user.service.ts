@@ -22,6 +22,9 @@ export class UserService {
   private changePasswordListener = new Subject<string>();
   private resetPasswordListener = new Subject<string>();
   private newPasswordListener = new Subject<string>();
+  private isUserLoggedListener = new Subject<LoggedUser>();
+  private userRegisterRequestsListener = new Subject<User[]>();
+  private registredUsersListener = new Subject<User[]>();
 
   getUserRegisterListener(){
     return this.userRegisterListener.asObservable();
@@ -51,6 +54,18 @@ export class UserService {
     return this.newPasswordListener.asObservable();
   }
 
+  getIsUserLoggedListener(){
+    return this.isUserLoggedListener.asObservable();
+  }
+
+  getUserRegisterRequestsListener(){
+    return this.userRegisterRequestsListener.asObservable();
+  }
+
+  getRegistredUsersListener(){
+    return this.registredUsersListener.asObservable();
+  }
+
   registerUser(firstname:string, lastname:string, username:string, password:string,
      birthdate:Date, city: string, country:string, email:string, image: File){
       if(image!=null){
@@ -73,7 +88,8 @@ export class UserService {
        }else if(image==null){
         const user: User = {
           _id:null, firstname:firstname, lastname:lastname, username:username, password:password,
-          birthdate:birthdate, city:city, country:country, email:email, imagePath:null
+          birthdate:birthdate, city:city, country:country, email:email, imagePath:null, privilege: null,
+          allowed: null
         };
         this.http.post<{message:string}>('http://localhost:3000/api/user/signupNoImage', user)
           .subscribe((responseData) => {
@@ -95,10 +111,30 @@ export class UserService {
         }
         localStorage.setItem("logged",JSON.stringify(loggedUser));
         this.userLoginListener.next(response.message);
+        this.isUserLoggedListener.next(loggedUser);
         this.router.navigate(['/userInfo',response._id]);
       }, error => {
         this.userLoginListener.next(error.error.message);
       });
+  }
+
+  logoutUser(){
+    localStorage.removeItem("logged");
+    this.isUserLoggedListener.next(null);
+    this.router.navigate(['/']);
+  }
+
+  isUserLogged(){
+    let loggedUser: LoggedUser = JSON.parse(localStorage.getItem("logged"));
+    if(loggedUser){
+      this.isUserLoggedListener.next(loggedUser);
+      this.router.navigate(['/userInfo', loggedUser._id]);
+    }
+  }
+
+  whoIsLogged():LoggedUser{
+    let user: LoggedUser = JSON.parse(localStorage.getItem("logged"));
+    return user;
   }
 
   getUser(id:number){
@@ -132,6 +168,7 @@ export class UserService {
         .subscribe(response => {
           localStorage.removeItem("logged");
           this.changePasswordListener.next(response.message);
+          this.isUserLoggedListener.next(null);
           this.router.navigate(['/']);
         }, error => {
           this.changePasswordListener.next(error.error.message);
@@ -159,9 +196,58 @@ export class UserService {
       }
       localStorage.setItem("logged",JSON.stringify(loggedUser));
       this.newPasswordListener.next(response.message);
+      this.isUserLoggedListener.next(loggedUser);
       this.router.navigate(['/userInfo',response._id]);
     }, error => {
       this.newPasswordListener.next(error.error.message);
     });
+  }
+
+  getUserRegisterRequests(){
+    this.http.get<{message:string, data:User[]}>('http://localhost:3000/api/user/getUserRegisterRequests')
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+        this.userRegisterRequestsListener.next([...responseData.data]);
+      });
+  }
+
+  acceptRegisterRequest(id:number){
+    this.http.get<{message:string}>('http://localhost:3000/api/user/acceptRegisterRequest/'+id)
+      .subscribe(responseData => {
+        console.log(responseData.message);
+        window.location.reload();
+      });
+  }
+
+  refuseRegisterRequest(id:number){
+    this.http.delete<{message:string}>('http://localhost:3000/api/user/refuseRegisterRequest/'+id)
+    .subscribe(responseData => {
+      console.log(responseData.message);
+      window.location.reload();
+    });
+  }
+
+  getRegistredUsers(){
+    this.http.get<{message:string, data:User[]}>('http://localhost:3000/api/user/getRegistredUsers')
+      .subscribe(responseData => {
+        console.log(responseData.message);
+        this.registredUsersListener.next([...responseData.data]);
+      });
+  }
+
+  upgradeToModerator(id:number){
+    this.http.get<{message:string}>('http://localhost:3000/api/user/upgradeToModerator/'+id)
+      .subscribe(responseData => {
+        console.log(responseData.message);
+        window.location.reload();
+      });
+  }
+
+  downgradeToUser(id:number){
+    this.http.get<{message:string}>('http://localhost:3000/api/user/downgradeToUser/'+id)
+      .subscribe(responseData => {
+        console.log(responseData.message);
+        window.location.reload();
+      });
   }
 }

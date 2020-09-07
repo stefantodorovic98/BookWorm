@@ -1,0 +1,129 @@
+<mat-card>
+    <mat-card-title color="primary">
+        Zahtevi za registraciju
+    </mat-card-title>
+    <mat-table [dataSource]="registerRequests" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="firstname">
+            <mat-header-cell *matHeaderCellDef> Ime </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="lastname">
+            <mat-header-cell *matHeaderCellDef> Prezime </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="path">
+            <mat-header-cell *matHeaderCellDef> Slika</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <div class="image"><img [src]="element.imagePath" /> </div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="birthdate">
+            <mat-header-cell *matHeaderCellDef> Prezime </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.birthdate}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="city">
+            <mat-header-cell *matHeaderCellDef> Grad </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.city}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+            <mat-header-cell *matHeaderCellDef> Drzava </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.country}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="accept">
+            <mat-header-cell *matHeaderCellDef> Prihvati zahtev </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="acceptRequest(element._id)">
+                    <mat-icon>add_box</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="refuse">
+            <mat-header-cell *matHeaderCellDef> Odbaci zahtev </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="refuseRequest(element._id)">
+                    <mat-icon>delete_sweep</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForRequests"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForRequests;"></mat-row>
+
+    </mat-table>
+</mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">
+        Upravljanje privilegijama
+    </mat-card-title>
+    <mat-table [dataSource]="registredUsers" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="firstname">
+            <mat-header-cell *matHeaderCellDef> Ime </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="lastname">
+            <mat-header-cell *matHeaderCellDef> Prezime </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="path">
+            <mat-header-cell *matHeaderCellDef> Slika</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <div class="image"><img [src]="element.imagePath" /> </div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="birthdate">
+            <mat-header-cell *matHeaderCellDef> Prezime </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.birthdate}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="city">
+            <mat-header-cell *matHeaderCellDef> Grad </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.city}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+            <mat-header-cell *matHeaderCellDef> Drzava </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.country}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="privilege">
+            <mat-header-cell *matHeaderCellDef> Vrsta korisnika </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.privilege}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="user">
+            <mat-header-cell *matHeaderCellDef> Korisnik </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="downgradeToUser(element._id)">
+                    <mat-icon *ngIf="element.privilege==='Moderator'">people</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="moderator">
+            <mat-header-cell *matHeaderCellDef> Moderator </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="upgradeToModerator(element._id)">
+                    <mat-icon *ngIf="element.privilege==='Korisnik'">supervised_user_circle</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForPrivileges"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForPrivileges;"></mat-row>
+
+    </mat-table>
+</mat-card>

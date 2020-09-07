@@ -9,4 +9,6 @@ export interface User {
   city: string;
   country: string;
   email: string;
+  privilege: string;
+  allowed: string;
 }

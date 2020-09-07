@@ -3,19 +3,25 @@
     <span class="spacer"></span>
     <ul>
         <li>
-            <a mat-button routerLink="/login" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Pocetna strana</a>
-        </li>
-        <li>
             <a mat-button routerLink="/bookList" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Knjige</a>
         </li>
-        <li>
-            <a mat-button routerLink="/bookAdd" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Dodaj knjigu</a>
-        </li>
-        <li>
+        <li *ngIf="!loggedUser">
             <a mat-button routerLink="" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Prijava</a>
         </li>
-        <li>
+        <li *ngIf="!loggedUser">
             <a mat-button routerLink="/register" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Registracija</a>
+        </li>
+        <li *ngIf="loggedUser && privilege==='A'">
+            <a mat-button [routerLink]="['/admin',loggedUser._id]" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Admin</a>
+        </li>
+        <li *ngIf="loggedUser && privilege==='M'">
+            <a mat-button [routerLink]="['/moderator',loggedUser._id]" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Moderator</a>
+        </li>
+        <li *ngIf="loggedUser">
+            <a mat-button [routerLink]="['/userInfo',loggedUser._id]" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Profil</a>
+        </li>
+        <li *ngIf="loggedUser">
+            <a mat-button routerLink="/logout" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Odjavi se</a>
         </li>
     </ul>
     <img src="../../assets/images/logo.jpg">

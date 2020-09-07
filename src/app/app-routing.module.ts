@@ -11,10 +11,15 @@ import { UserInfoComponent } from './user/user-info/user-info.component';
 import { UserConfigureComponent } from './user/user-configure/user-configure.component';
 import { ChangePasswordComponent } from './user/change-password/change-password.component';
 import { NewPasswordComponent } from './user/new-password/new-password.component';
+import { LogoutComponent } from './user/logout/logout.component';
+import { AdminComponent } from './user/admin/admin.component';
+import { BookConfigureComponent } from './books/book-configure/book-configure.component';
+import { ModeratorComponent } from './user/moderator/moderator.component';
 
 const routes: Routes = [
   {path:"", component:LoginComponent},
   {path:"login", component:LoginComponent},
+  {path:"logout", component: LogoutComponent},
   {path:"register", component:RegisterComponent},
   {path:"forgottenPassword", component: ForgottenPasswordComponent},
   {path:"bookList", component: BookListComponent},
@@ -23,7 +28,10 @@ const routes: Routes = [
   {path:"userInfo/:id", component: UserInfoComponent},
   {path:"userConfigure/:id", component: UserConfigureComponent},
   {path:"changePassword/:id", component: ChangePasswordComponent},
-  {path:"newPassword/:id", component: NewPasswordComponent}
+  {path:"newPassword/:id", component: NewPasswordComponent},
+  {path:"admin/:id", component: AdminComponent},
+  {path:"bookConfigure/:id", component: BookConfigureComponent},
+  {path:"moderator/:id", component: ModeratorComponent}
 ];
 
 @NgModule({

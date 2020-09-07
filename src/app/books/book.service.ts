@@ -29,7 +29,7 @@ export class BookService {
     });
   }
 
-  addBook(title:string, image: File, authors: string[], issueDate: Date, genres: string[], description: string){
+  addBook(title:string, image: File, authors: string[], issueDate: Date, genres: string[], description: string, allowed: string){
     if(image!=null){
       const bookData = new FormData();
       bookData.append("title", title);
@@ -38,21 +38,25 @@ export class BookService {
       bookData.append("issueDate", issueDate.toDateString());
       bookData.append("genres", JSON.stringify(genres));
       bookData.append("description", description);
+      bookData.append("allowed", allowed);
       this.http.post<{message:string}>('http://localhost:3000/api/books/addBookImage', bookData)
         .subscribe((responseData) => {
           console.log(responseData.message);
+          window.location.reload();
         });
     }else if(image==null){
       const book: Book = {
         _id:null, imagePath:null, title:title, authors: JSON.stringify(authors),
          issueDate: issueDate.toDateString(), genres: JSON.stringify(genres), description: description,
-         averageMark: null
+         averageMark: null, allowed: allowed
       };
       this.http.post<{message:string}>('http://localhost:3000/api/books/addBookNoImage', book)
         .subscribe((responseData) => {
-          console.log(responseData.message)
+          console.log(responseData.message);
+          window.location.reload();
         });
     }
+
   }
 
   find(title:string, author:string, genres:string[]){

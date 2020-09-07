@@ -1,0 +1,22 @@
+mat-table {
+    width: 100%;
+    margin: 20px auto;
+}
+
+.image {
+    height: 5rem;
+    margin: 1rem 0;
+}
+
+.image img {
+    height: 100%;
+}
+
+mat-card {
+    width: 60%;
+    margin: 20px auto;
+}
+
+mat-card-title {
+    text-align: center;
+}

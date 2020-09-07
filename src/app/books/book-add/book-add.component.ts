@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { ImageCheckValidator } from './image.validator';
 import { BookService } from '../book.service';
+import { UserService } from 'src/app/user/user.service';
+import { LoggedUser } from 'src/app/user/models/loggedUser.model';
 
 
 @Component({
@@ -22,7 +24,7 @@ export class BookAddComponent implements OnInit {
     "jpg", "jpeg", "png"
   ];
 
-  constructor(private service: BookService) { }
+  constructor(private bookService: BookService, private userService: UserService) { }
 
   ngOnInit(): void {
     this.bookAddForm = new FormGroup({
@@ -44,9 +46,11 @@ export class BookAddComponent implements OnInit {
     if(this.bookAddForm.invalid){
       return;
     }
-
-    this.service.addBook(this.bookAddForm.value.title, this.bookAddForm.value.image, this.authors,
-       this.bookAddForm.value.issueDate,this.genres, this.bookAddForm.value.description);
+    let allowed :string = "0";
+    let loggedUser: LoggedUser = this.userService.whoIsLogged();
+    if(loggedUser.privilege === "A" || loggedUser.privilege === "M") allowed = "1";
+    this.bookService.addBook(this.bookAddForm.value.title, this.bookAddForm.value.image, this.authors,
+       this.bookAddForm.value.issueDate,this.genres, this.bookAddForm.value.description, allowed);
   }
 
   onImagePicked(event: Event){

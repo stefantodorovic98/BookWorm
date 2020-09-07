@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
 
-const BookRequest = require('../models/book');
+const Books = require('../models/book');
 const { fstat } = require("fs");
 const { arrayify } = require("tslint/lib/utils");
 
@@ -20,13 +20,14 @@ const storage = multer.diskStorage({
 
 router.post("/addBookImage", multer({ storage: storage }).single("image"), (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
-    const book = new BookRequest({
+    const book = new Books({
         title: req.body.title,
         imagePath: url + "/images/bookImages/" + req.file.filename,
         authors: req.body.authors,
         issueDate: req.body.issueDate,
         genres: req.body.genres,
-        description: req.body.description
+        description: req.body.description,
+        allowed: req.body.allowed
     });
     book.save()
         .then(newBook => {
@@ -44,13 +45,14 @@ router.post("/addBookNoImage", (req, res, next) => {
     const path = "backend/images/bookImages/" + name;
     fs.copyFileSync("backend/images/bookGenericImage/book.jpg", path);
     const url = req.protocol + "://" + req.get("host");
-    const book = new BookRequest({
+    const book = new Books({
         title: req.body.title,
         imagePath: url + "/images/bookImages/" + name,
         authors: req.body.authors,
         issueDate: req.body.issueDate,
         genres: req.body.genres,
-        description: req.body.description
+        description: req.body.description,
+        allowed: req.body.allowed
     });
     book.save()
         .then(newBook => {
@@ -63,7 +65,7 @@ router.post("/addBookNoImage", (req, res, next) => {
 
 
 router.get("/getBooks", (req, res, next) => {
-    BookRequest.find()
+    Books.find()
         .then(books => {
             res.status(200).json({
                 message: "Sve je ok",
@@ -73,7 +75,7 @@ router.get("/getBooks", (req, res, next) => {
 });
 
 router.post("/findBooks", (req, res, next) => {
-    BookRequest.find()
+    Books.find()
         .then(books => {
             let title = req.body.title;
             let author = req.body.author;
@@ -130,7 +132,7 @@ router.post("/findBooks", (req, res, next) => {
 });
 
 router.get("/getBook/:id", (req, res, next) => {
-    BookRequest.findById(req.params.id)
+    Books.findById(req.params.id)
         .then(book => {
             res.status(200).json({
                 message: "Sve je ok",

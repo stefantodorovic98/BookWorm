@@ -6,8 +6,9 @@ const bookSchema = mongoose.Schema({
     authors: { type: String, required: true },
     issueDate: { type: String, required: true },
     genres: { type: String, required: true },
-    description: { type: String, required: true }
+    description: { type: String, required: true },
+    allowed: { type: String, required: true }
 });
 
 
-module.exports = mongoose.model('BookRequest', bookSchema);
+module.exports = mongoose.model('Books', bookSchema);

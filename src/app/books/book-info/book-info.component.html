@@ -1,7 +1,18 @@
 <mat-card>
-    <mat-card-header>
-        <mat-card-title>Informacije o knjizi</mat-card-title>
-    </mat-card-header>
+    <table>
+        <tr>
+            <td>
+                <mat-card-header>
+                    <mat-card-title>Informacije o knjizi</mat-card-title>
+                </mat-card-header>
+            </td>
+            <td>
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" *ngIf="privilege==='A'" (click)="configureBook()">
+              <mat-icon>build</mat-icon>
+            </button>
+            </td>
+        </tr>
+    </table>
     <table>
         <tr>
             <td class="image-preview container">
@@ -55,3 +66,5 @@
         </tr>
     </table>
 </mat-card>
+
+{{book.allowed}}

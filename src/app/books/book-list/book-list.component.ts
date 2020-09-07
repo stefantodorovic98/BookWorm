@@ -5,6 +5,8 @@ import { Book } from "../models/book.model";
 import { BookService } from "../book.service";
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
+import { UserService } from 'src/app/user/user.service';
+import { LoggedUser } from 'src/app/user/models/loggedUser.model';
 
 @Component({
   selector: 'app-book-list',
@@ -13,13 +15,14 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class BookListComponent implements OnInit, OnDestroy {
 
-  constructor(private service: BookService) { }
+  constructor(private bookService: BookService, private userService: UserService) { }
 
   public books: Book[] = [];
   private bookListSub: Subscription;
   displayedColumns: string[] = ['title', 'authors', 'genres', 'path', 'bookInfo'];
   genres: string[] = [];
   findForm: FormGroup;
+  isLogged = false;
 
   ngOnInit(): void {
     this.findForm = new FormGroup({
@@ -27,12 +30,15 @@ export class BookListComponent implements OnInit, OnDestroy {
       author: new FormControl(null),
       genres: new FormControl(null)
     });
-    this.bookListSub = this.service.getBookListListener()
+    this.bookListSub = this.bookService.getBookListListener()
       .subscribe((data) => {
         this.books = data;
         this.books = this.niceOutput(this.books);
       });
-      this.service.getBooks();
+    this.bookService.getBooks();
+    let logUser: LoggedUser = this.userService.whoIsLogged();
+    if(logUser) this.isLogged = true;
+    else this.isLogged = false;
   }
 
   ngOnDestroy(): void {
@@ -64,6 +70,6 @@ export class BookListComponent implements OnInit, OnDestroy {
   }
 
   find(){
-    this.service.find(this.findForm.value.title, this.findForm.value.author, this.genres);
+    this.bookService.find(this.findForm.value.title, this.findForm.value.author, this.genres);
   }
 }

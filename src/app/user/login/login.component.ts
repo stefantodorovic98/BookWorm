@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe((message) => {
         this.message = message;
       });
+    this.service.isUserLogged();
   }
 
   ngOnDestroy(): void {

@@ -34,8 +34,10 @@ import { UserInfoComponent } from './user/user-info/user-info.component';
 import { UserConfigureComponent } from './user/user-configure/user-configure.component';
 import { ChangePasswordComponent } from './user/change-password/change-password.component';
 import { NewPasswordComponent } from './user/new-password/new-password.component';
-
-
+import { LogoutComponent } from './user/logout/logout.component';
+import { AdminComponent } from './user/admin/admin.component';
+import { BookConfigureComponent } from './books/book-configure/book-configure.component';
+import { ModeratorComponent } from './user/moderator/moderator.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,11 @@ import { NewPasswordComponent } from './user/new-password/new-password.component
     UserInfoComponent,
     UserConfigureComponent,
     ChangePasswordComponent,
-    NewPasswordComponent
+    NewPasswordComponent,
+    LogoutComponent,
+    AdminComponent,
+    BookConfigureComponent,
+    ModeratorComponent
   ],
   imports: [
     BrowserModule,

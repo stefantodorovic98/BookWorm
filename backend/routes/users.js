@@ -4,10 +4,7 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 const nodemailer = require('nodemailer');
 
-const RegisterRequest = require('../models/user');
-const RegisteredUser = require('../models/user');
-const { isDoStatement } = require("typescript");
-const { Console } = require("console");
+const User = require('../models/user');
 
 const router = express.Router();
 
@@ -27,7 +24,7 @@ router.post("/signupImage", multer({ storage: storage }).single("image"), (req, 
         //let date = new Date(req.body.birthdate);
         bcrypt.hash(req.body.password, 10)
             .then(hash => {
-                const user = new RegisteredUser({
+                const user = new User({
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
                     imagePath: url + "/images/profileImages/" + req.file.filename,
@@ -37,7 +34,8 @@ router.post("/signupImage", multer({ storage: storage }).single("image"), (req, 
                     city: req.body.city,
                     country: req.body.country,
                     email: req.body.email,
-                    privilege: "A"
+                    privilege: "A",
+                    allowed: "1"
                 });
                 user.save()
                     .then(newUser => {
@@ -60,7 +58,7 @@ router.post("/signupImage", multer({ storage: storage }).single("image"), (req, 
         //let date = new Date(req.body.birthdate);
         bcrypt.hash(req.body.password, 10)
             .then(hash => {
-                const user = new RegisterRequest({
+                const user = new User({
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
                     imagePath: url + "/images/profileImages/" + req.file.filename,
@@ -70,7 +68,8 @@ router.post("/signupImage", multer({ storage: storage }).single("image"), (req, 
                     city: req.body.city,
                     country: req.body.country,
                     email: req.body.email,
-                    privilege: "U"
+                    privilege: "U",
+                    allowed: "0"
                 });
                 user.save()
                     .then(newUser => {
@@ -101,7 +100,7 @@ router.post("/signupNoImage", (req, res, next) => {
         let dateString = date.toDateString();
         bcrypt.hash(req.body.password, 10)
             .then(hash => {
-                const user = new RegisteredUser({
+                const user = new User({
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
                     imagePath: url + "/images/profileImages/" + name,
@@ -111,7 +110,8 @@ router.post("/signupNoImage", (req, res, next) => {
                     city: req.body.city,
                     country: req.body.country,
                     email: req.body.email,
-                    privilege: "A"
+                    privilege: "A",
+                    allowed: "1"
                 });
                 user.save()
                     .then(newUser => {
@@ -138,7 +138,7 @@ router.post("/signupNoImage", (req, res, next) => {
         let dateString = date.toDateString();
         bcrypt.hash(req.body.password, 10)
             .then(hash => {
-                const user = new RegisterRequest({
+                const user = new User({
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
                     imagePath: url + "/images/profileImages/" + name,
@@ -148,7 +148,8 @@ router.post("/signupNoImage", (req, res, next) => {
                     city: req.body.city,
                     country: req.body.country,
                     email: req.body.email,
-                    privilege: "U"
+                    privilege: "U",
+                    allowed: "0"
                 });
                 user.save()
                     .then(newUser => {
@@ -171,7 +172,7 @@ router.post("/signupNoImage", (req, res, next) => {
 
 
 router.post("/login", (req, res, next) => {
-    RegisteredUser.findOne({ username: req.body.username })
+    User.findOne({ username: req.body.username })
         .then((user) => {
             if (!user) {
                 res.status(500).json({
@@ -184,6 +185,12 @@ router.post("/login", (req, res, next) => {
                 if (!condition) {
                     res.status(500).json({
                         message: "Nije dobra lozinka!",
+                        _id: null,
+                        privilege: null
+                    });
+                } else if (user.allowed === "0") {
+                    res.status(500).json({
+                        message: "Nalog nije odobren od strane administratora!",
                         _id: null,
                         privilege: null
                     });
@@ -200,7 +207,7 @@ router.post("/login", (req, res, next) => {
 });
 
 router.get("/getUser/:id", (req, res, next) => {
-    RegisteredUser.findById(req.params.id)
+    User.findById(req.params.id)
         .then(user => {
             res.status(200).json({
                 message: "Sve je ok",
@@ -209,21 +216,10 @@ router.get("/getUser/:id", (req, res, next) => {
         });
 });
 
-router.get("/get", (req, res, next) => {
-    User.find()
-        .then(documents => {
-            res.status(200).json({
-                message: "Ok",
-                users: documents
-            });
-        });
-
-});
-
 router.put("/updateUser/:id", (req, res, next) => {
     let date = new Date(req.body.birthdate);
     let dateString = date.toDateString();
-    RegisteredUser.updateOne({ _id: req.params.id }, {
+    User.updateOne({ _id: req.params.id }, {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             birthdate: dateString,
@@ -249,7 +245,7 @@ router.put("/updateUser/:id", (req, res, next) => {
 });
 
 router.put("/changePassword/:id", (req, res, next) => {
-    RegisteredUser.findOne({ _id: req.params.id })
+    User.findOne({ _id: req.params.id })
         .then((user) => {
             if (!user) {
                 res.status(500).json({
@@ -264,7 +260,7 @@ router.put("/changePassword/:id", (req, res, next) => {
                 } else {
                     bcrypt.hash(req.body.newPassword, 10)
                         .then(hash => {
-                            RegisteredUser.updateOne({ _id: req.params.id }, { password: hash })
+                            User.updateOne({ _id: req.params.id }, { password: hash })
                                 .then(result => {
                                     if (result.nModified > 0) {
                                         console.log(req.body.newPassword)
@@ -307,11 +303,16 @@ const transporter = nodemailer.createTransport({
 });
 
 router.get("/resetPassword/:email", (req, res, next) => {
-    RegisteredUser.findOne({ email: req.params.email })
+    User.findOne({ email: req.params.email })
         .then((user) => {
             if (!user) {
                 res.status(500).json({
                     message: "Unesen je nepostojeci email!",
+                    _id: null
+                });
+            } else if (user.allowed === "0") {
+                res.status(500).json({
+                    message: "Unesen je mail naloga koji jos uvijek nije odobren!",
                     _id: null
                 });
             } else {
@@ -339,7 +340,7 @@ router.get("/resetPassword/:email", (req, res, next) => {
 });
 
 router.put("/newPassword/:id", (req, res, next) => {
-    RegisteredUser.findOne({ _id: req.params.id })
+    User.findOne({ _id: req.params.id })
         .then((user) => {
             if (!user) {
                 res.status(500).json({
@@ -350,7 +351,7 @@ router.put("/newPassword/:id", (req, res, next) => {
             } else {
                 bcrypt.hash(req.body.password, 10)
                     .then(hash => {
-                        RegisteredUser.updateOne({ _id: req.params.id }, { password: hash })
+                        User.updateOne({ _id: req.params.id }, { password: hash })
                             .then(result => {
                                 if (result.nModified > 0) {
                                     console.log(req.body.password)
@@ -377,6 +378,112 @@ router.put("/newPassword/:id", (req, res, next) => {
                     });
             }
 
+        });
+});
+
+router.get("/getUserRegisterRequests", (req, res, next) => {
+    User.find({ allowed: "0" })
+        .then(users => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: users
+            });
+        });
+});
+
+router.get("/acceptRegisterRequest/:id", (req, res, next) => {
+    User.updateOne({ _id: req.params.id }, {
+            allowed: "1"
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.delete("/refuseRegisterRequest/:id", (req, res, next) => {
+    User.deleteOne({ _id: req.params.id })
+        .then(result => {
+            if (result.deletedCount > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.get("/getRegistredUsers", (req, res, next) => {
+    User.find({ allowed: "1", privilege: { $ne: "A" } })
+        .then(users => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: users
+            });
+        });
+});
+
+router.get("/upgradeToModerator/:id", (req, res, next) => {
+    User.updateOne({ _id: req.params.id }, {
+            privilege: "M"
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.get("/downgradeToUser/:id", (req, res, next) => {
+    User.updateOne({ _id: req.params.id }, {
+            privilege: "U"
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
         });
 });
 
