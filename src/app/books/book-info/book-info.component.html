@@ -13,7 +13,7 @@
             </td>
         </tr>
     </table>
-    <table>
+    <table *ngIf="book">
         <tr>
             <td class="image-preview container">
                 <img [src]="book.imagePath" [alt]="book.title" class="image-preview image">
@@ -51,7 +51,7 @@
         </tr>
     </table>
     <br/>
-    <table>
+    <table *ngIf="book">
         <tr>
             <td>
                 <h2>Kratak opis knjige</h2>
@@ -66,5 +66,3 @@
         </tr>
     </table>
 </mat-card>
-
-{{book.allowed}}

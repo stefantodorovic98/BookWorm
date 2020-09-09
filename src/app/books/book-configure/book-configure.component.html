@@ -1,2 +1,84 @@
-<p>book-configure works!</p>
-{{id}}
+<mat-card>
+    <mat-card-title color="primary">
+        Dodaj knjigu
+    </mat-card-title>
+    <form (submit)="onBookConfigure()" [formGroup]="bookConfigureForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Naslov</mat-label>
+            <input matInput type="text" formControlName="title">
+            <mat-error *ngIf="bookConfigureForm.get('title').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <div>
+            <button mat-stroked-button color="primary" type="button" (click)="file.click()">Izaberi sliku naslovne strane</button>
+            <input type="file" #file (change)="onImagePicked($event)" accept=".png, .jpg, .jpeg">
+            <button mat-stroked-button color="primary" type="button" (click)="onDefault()">Ponisti</button>
+        </div>
+        <div class="image-preview" *ngIf="preview !== '' && preview && bookConfigureForm.get('image').valid">
+            <img [src]="preview" [alt]="bookConfigureForm.value.title">
+        </div>
+        <mat-form-field appearance="outline">
+            <mat-label>Dodaj autora</mat-label>
+            <input matInput type="text" formControlName="author">
+            <button mat-button type="button" *ngIf="bookConfigureForm.get('author').value!='' && bookConfigureForm.get('author').value!=null" matSuffix mat-icon-button aria-label="Add" (click)="addAuthor(bookConfigureForm.get('author').value)">
+              <mat-icon>library_add</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-list *ngIf="authors.length>0">
+            <div mat-subheader>Autori</div>
+            <mat-list-item *ngFor="let a of authors">
+                <mat-icon mat-list-icon>book</mat-icon>
+                <div mat-line>{{a}}</div>
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Add" (click)="deleteAuthor(a)">
+                      <mat-icon>delete</mat-icon>
+                  </button>
+            </mat-list-item>
+        </mat-list>
+        <mat-form-field appearance="outline">
+            <mat-label>Datum izdavanja</mat-label>
+            <input matInput [matDatepicker]="myPicker" placeholder="date" formControlName="issueDate" readonly>
+            <mat-datepicker-toggle matSuffix [for]="myPicker"></mat-datepicker-toggle>
+            <mat-datepicker #myPicker></mat-datepicker>
+            <mat-error *ngIf="bookConfigureForm.get('issueDate').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <!-- <mat-form-field appearance="outline">
+            <mat-label>Odaberite zanrove (maksimalno 3 moguca)</mat-label>
+            <mat-select [value]="genres" disableRipple multiple formControlName="genres" (selectionChange)="changed()">
+                <mat-option value="Avantura" #avantura [disabled]="genres.length>2 && !genres.includes(avantura.value)">Avantura</mat-option>
+                <mat-option value="Komedija" #komedija [disabled]="genres.length>2 && !genres.includes(komedija.value)">Komedija</mat-option>
+                <mat-option value="Tragedija" #tragedija [disabled]="genres.length>2 && !genres.includes(tragedija.value)">Tragedija</mat-option>
+                <mat-option value="Drama" #drama [disabled]="genres.length>2 && !genres.includes(drama.value)">Drama</mat-option>
+                <mat-option value="Krimi" #krimi [disabled]="genres.length>2 && !genres.includes(krimi.value)">Krimi</mat-option>
+            </mat-select>
+            <mat-error *ngIf="bookConfigureForm.get('genres').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field> -->
+        <mat-form-field appearance="outline">
+            <mat-label>Odaberite zanrove (maksimalno 3 moguca)</mat-label>
+            <mat-select disableRipple multiple formControlName="genres" (selectionChange)="changed()">
+                <mat-option *ngFor="let g of genresFront" [value]="g" #avantura [disabled]="genres.length>2 && !genres.includes(g)">{{g}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="bookConfigureForm.get('genres').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Kratak opis knjige</mat-label>
+            <textarea matInput rows="4" formControlName="description" placeholder="Napisite sadrzaj"></textarea>
+            <mat-error *ngIf="bookConfigureForm.get('description').invalid">
+                Please enter a post content.</mat-error>
+        </mat-form-field>
+        <mat-error *ngIf="uslov">
+            Mora biti naveden barem jedan autor!
+        </mat-error>
+        <mat-error *ngIf="message!=null">
+            {{message}}
+        </mat-error>
+        <button mat-raised-button color="primary" type="submit">Dodaj knjigu</button>
+        <p>{{bookConfigureForm.status}}</p>
+    </form>
+</mat-card>

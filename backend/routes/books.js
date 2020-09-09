@@ -3,8 +3,7 @@ const multer = require("multer");
 const fs = require("fs");
 
 const Books = require('../models/book');
-const { fstat } = require("fs");
-const { arrayify } = require("tslint/lib/utils");
+const Genre = require('../models/genre');
 
 const router = express.Router();
 
@@ -45,11 +44,13 @@ router.post("/addBookNoImage", (req, res, next) => {
     const path = "backend/images/bookImages/" + name;
     fs.copyFileSync("backend/images/bookGenericImage/book.jpg", path);
     const url = req.protocol + "://" + req.get("host");
+    let date = new Date(req.body.issueDate);
+    let dateString = date.toDateString();
     const book = new Books({
         title: req.body.title,
         imagePath: url + "/images/bookImages/" + name,
         authors: req.body.authors,
-        issueDate: req.body.issueDate,
+        issueDate: dateString,
         genres: req.body.genres,
         description: req.body.description,
         allowed: req.body.allowed
@@ -140,5 +141,212 @@ router.get("/getBook/:id", (req, res, next) => {
             });
         });
 });
+
+router.get("/getBooksNotAllowed", (req, res, next) => {
+    Books.find({ allowed: "0" })
+        .then(books => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: books
+            });
+        });
+});
+
+router.get("/acceptBookRequest/:id", (req, res, next) => {
+    Books.updateOne({ _id: req.params.id }, {
+            allowed: "1"
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.delete("/refuseBookRequest/:id", (req, res, next) => {
+    Books.deleteOne({ _id: req.params.id })
+        .then(result => {
+            if (result.deletedCount > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.put("/updateBookNewImage/:id", multer({ storage: storage }).single("image"), (req, res, next) => {
+    const url = req.protocol + "://" + req.get("host");
+    const image = url + "/images/bookImages/" + req.file.filename;
+    Books.updateOne({ _id: req.params.id }, {
+            title: req.body.title,
+            imagePath: image,
+            authors: req.body.authors,
+            issueDate: req.body.issueDate,
+            genres: req.body.genres,
+            description: req.body.description
+        })
+        .then(result => {
+            console.log(result)
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.put("/updateBookOldImage/:id", (req, res, next) => {
+    let date = new Date(req.body.issueDate);
+    let dateString = date.toDateString();
+    Books.updateOne({ _id: req.params.id }, {
+            title: req.body.title,
+            imagePath: req.body.imagePath,
+            authors: req.body.authors,
+            issueDate: dateString,
+            genres: req.body.genres,
+            description: req.body.description
+        })
+        .then(result => {
+            console.log(result)
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.put("/updateBookDefaultImage/:id", (req, res, next) => {
+    const name = Date.now() + "-" + "book.jpg";
+    const path = "backend/images/bookImages/" + name;
+    fs.copyFileSync("backend/images/bookGenericImage/book.jpg", path);
+    const url = req.protocol + "://" + req.get("host");
+    const image = url + "/images/bookImages/" + name;
+    let date = new Date(req.body.issueDate);
+    let dateString = date.toDateString();
+    Books.updateOne({ _id: req.params.id }, {
+            title: req.body.title,
+            imagePath: image,
+            authors: req.body.authors,
+            issueDate: dateString,
+            genres: req.body.genres,
+            description: req.body.description
+        })
+        .then(result => {
+            console.log(result)
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.post("/addGenre", (req, res, next) => {
+    const genre = new Genre({
+        name: req.body.name
+    });
+    genre.save()
+        .then(newGenre => {
+            console.log(newGenre);
+            res.status(201).json({
+                message: "Ok"
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Zanr vec postoji"
+            })
+        });;
+});
+
+router.get("/getGenres", (req, res, next) => {
+    Genre.find()
+        .then(genres => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: genres
+            });
+        });
+});
+
+router.post("/deleteGenre", (req, res, next) => {
+    let reg = new RegExp(req.body.name, 'g');
+    Books.find({ genres: reg })
+        .then(books => {
+            if (books.length == 0) {
+                Genre.deleteOne({ _id: req.body._id })
+                    .then(result => {
+                        if (result.deletedCount > 0) {
+                            res.status(200).json({
+                                message: "Ok"
+                            });
+                        } else {
+                            res.status(500).json({
+                                message: "Nijedno polje nije promenjeno"
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        res.status(500).json({
+                            message: "Problem s azuriranjem"
+                        })
+                    });
+            } else {
+                res.status(500).json({
+                    message: "Postoji knjiga sa tim zanrom"
+                });
+            }
+        });
+});
+
+
 
 module.exports = router;

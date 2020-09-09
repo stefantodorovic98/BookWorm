@@ -7,6 +7,7 @@ const bookSchema = mongoose.Schema({
     issueDate: { type: String, required: true },
     genres: { type: String, required: true },
     description: { type: String, required: true },
+    averageMark: { type: Number, required: true },
     allowed: { type: String, required: true }
 });
 

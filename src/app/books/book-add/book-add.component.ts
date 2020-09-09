@@ -1,10 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { ImageCheckValidator } from './image.validator';
 import { BookService } from '../book.service';
 import { UserService } from 'src/app/user/user.service';
 import { LoggedUser } from 'src/app/user/models/loggedUser.model';
+import { Subscription } from 'rxjs';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -12,17 +14,23 @@ import { LoggedUser } from 'src/app/user/models/loggedUser.model';
   templateUrl: './book-add.component.html',
   styleUrls: ['./book-add.component.css']
 })
-export class BookAddComponent implements OnInit {
+export class BookAddComponent implements OnInit, OnDestroy {
 
   bookAddForm: FormGroup;
   preview: string;
   authors: string[] = [];
   genres: string[] = [];
   uslov: boolean = false;
+  private getGenresSub: Subscription;
+  genresFront: string[] = [];
 
   extensions: string[] = [
     "jpg", "jpeg", "png"
   ];
+
+  // zanrovi: string[] = ["Avantura", "Komedija", "Tragedija", "Drama", "Krimi"];
+
+
 
   constructor(private bookService: BookService, private userService: UserService) { }
 
@@ -35,6 +43,19 @@ export class BookAddComponent implements OnInit {
       genres: new FormControl(null,[Validators.required]),
       description: new FormControl(null,[Validators.required])
     });
+
+    this.getGenresSub = this.bookService.getGetGenresListener()
+      .subscribe(data => {
+        this.genresFront = [];
+        for(let i=0;i<data.length;i++){
+          this.genresFront.push(data[i].name);
+        }
+      });
+    this.bookService.getGenres();
+  }
+
+  ngOnDestroy(): void {
+    this.getGenresSub.unsubscribe();
   }
 
   onBookAdd(){
@@ -87,7 +108,7 @@ export class BookAddComponent implements OnInit {
   }
 
   changed(){
-      this.genres = this.bookAddForm.value.genres;
+    this.genres = this.bookAddForm.value.genres;
   }
 
 }

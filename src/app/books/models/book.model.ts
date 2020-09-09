@@ -3,7 +3,7 @@ export interface Book {
   imagePath: string;
   title: string;
   authors: string;
-  issueDate: string;
+  issueDate: Date;
   genres: string;
   description: string;
   averageMark: number;

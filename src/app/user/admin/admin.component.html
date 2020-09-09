@@ -39,7 +39,7 @@
         <ng-container matColumnDef="accept">
             <mat-header-cell *matHeaderCellDef> Prihvati zahtev </mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <a mat-button (click)="acceptRequest(element._id)">
+                <a mat-button (click)="acceptUserRequest(element._id)">
                     <mat-icon>add_box</mat-icon>
                 </a>
             </mat-cell>
@@ -48,7 +48,7 @@
         <ng-container matColumnDef="refuse">
             <mat-header-cell *matHeaderCellDef> Odbaci zahtev </mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <a mat-button (click)="refuseRequest(element._id)">
+                <a mat-button (click)="refuseUserRequest(element._id)">
                     <mat-icon>delete_sweep</mat-icon>
                 </a>
             </mat-cell>
@@ -126,4 +126,106 @@
         <mat-row *matRowDef="let row; columns: displayedColumnsForPrivileges;"></mat-row>
 
     </mat-table>
+</mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">
+        Zahtevi za knjige
+    </mat-card-title>
+    <mat-table [dataSource]="books" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="authors">
+            <mat-header-cell *matHeaderCellDef> Autori </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.authors}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="genres">
+            <mat-header-cell *matHeaderCellDef> Zanrovi </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.genres}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="path">
+            <mat-header-cell *matHeaderCellDef> Slika</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <div class="image"><img [src]="element.imagePath" /> </div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="accept">
+            <mat-header-cell *matHeaderCellDef> Prihvati zahtev </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="acceptBookRequest(element._id)">
+                    <mat-icon>add_box</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="refuse">
+            <mat-header-cell *matHeaderCellDef> Odbaci zahtev </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="refuseBookRequest(element._id)">
+                    <mat-icon>delete_sweep</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForBooks"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForBooks;"></mat-row>
+
+    </mat-table>
+</mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">Dodaj zanr</mat-card-title>
+    <table>
+        <tr>
+            <td class="addGenre">
+                <mat-card>
+                    <form (submit)="onGenreAdd()" [formGroup]="genreAddForm">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Naslov</mat-label>
+                            <input matInput type="text" formControlName="genre">
+                            <mat-error *ngIf="genreAddForm.get('genre').invalid">
+                                Polje mora biti popunjeno!
+                            </mat-error>
+                        </mat-form-field>
+                        <button mat-raised-button color="primary" type="submit">Dodaj zanr</button>
+                        <mat-error *ngIf="messageAddGenre!=null">
+                            {{messageAddGenre}}
+                        </mat-error>
+                        <mat-error *ngIf="messageDeleteGenre!=null">
+                            {{messageDeleteGenre}}
+                        </mat-error>
+                    </form>
+                </mat-card>
+            </td>
+            <td class="listGenre">
+                <mat-table [dataSource]="genres" class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="name">
+                        <mat-header-cell *matHeaderCellDef> Naziv </mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="delete">
+                        <mat-header-cell *matHeaderCellDef> Obrisi zanr </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <a mat-button (click)="onGenreDelete(element._id, element.name)">
+                                <mat-icon>delete_sweep</mat-icon>
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumnsForGenres"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsForGenres;"></mat-row>
+
+                </mat-table>
+            </td>
+        </tr>
+    </table>
 </mat-card>

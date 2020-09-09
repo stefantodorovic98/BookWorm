@@ -32,6 +32,7 @@ export class ForgottenPasswordComponent implements OnInit, OnDestroy {
 
 
   onResetPassword(){
+    this.message=" ";
     if(this.resetPasswordForm.invalid) return;
     this.service.resetPassword(this.resetPasswordForm.value.email)
   }

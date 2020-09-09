@@ -23,6 +23,10 @@ export class BookListComponent implements OnInit, OnDestroy {
   genres: string[] = [];
   findForm: FormGroup;
   isLogged = false;
+  logUser: LoggedUser;
+
+   private getGenresSub: Subscription;
+  genresFront: string[] = [];
 
   ngOnInit(): void {
     this.findForm = new FormGroup({
@@ -36,13 +40,23 @@ export class BookListComponent implements OnInit, OnDestroy {
         this.books = this.niceOutput(this.books);
       });
     this.bookService.getBooks();
-    let logUser: LoggedUser = this.userService.whoIsLogged();
-    if(logUser) this.isLogged = true;
+    this.logUser = this.userService.whoIsLogged();
+    if(this.logUser) this.isLogged = true;
     else this.isLogged = false;
+
+    this.getGenresSub = this.bookService.getGetGenresListener()
+      .subscribe(data => {
+        this.genresFront = [];
+        for(let i=0;i<data.length;i++){
+          this.genresFront.push(data[i].name);
+        }
+      });
+    this.bookService.getGenres();
   }
 
   ngOnDestroy(): void {
     this.bookListSub.unsubscribe();
+    this.getGenresSub.unsubscribe();
   }
 
   niceOutput(books:Book[]):Book[]{

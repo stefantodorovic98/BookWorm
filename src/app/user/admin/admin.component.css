@@ -20,3 +20,19 @@ mat-card {
 mat-card-title {
     text-align: center;
 }
+
+
+/*  */
+
+mat-form-field {
+    width: 100%;
+}
+
+.addGenre {
+    width: 40%;
+    vertical-align: top;
+}
+
+.listGenre {
+    width: 60%;
+}

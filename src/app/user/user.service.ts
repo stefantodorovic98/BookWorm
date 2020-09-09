@@ -82,6 +82,7 @@ export class UserService {
         this.http.post<{message:string}>('http://localhost:3000/api/user/signupImage', userData)
          .subscribe((responseData) => {
            this.userRegisterListener.next(responseData.message);
+           this.router.navigate(['/']);
          }, error => {
            this.userRegisterListener.next(error.error.message);
          });
@@ -94,6 +95,7 @@ export class UserService {
         this.http.post<{message:string}>('http://localhost:3000/api/user/signupNoImage', user)
           .subscribe((responseData) => {
             this.userRegisterListener.next(responseData.message);
+            this.router.navigate(['/']);
           }, error => {
             this.userRegisterListener.next(error.error.message);
           });
@@ -124,6 +126,7 @@ export class UserService {
     this.router.navigate(['/']);
   }
 
+  //Za automatsko logovanje, isUserLoggedListener je za header
   isUserLogged(){
     let loggedUser: LoggedUser = JSON.parse(localStorage.getItem("logged"));
     if(loggedUser){
@@ -250,4 +253,5 @@ export class UserService {
         window.location.reload();
       });
   }
+
 }

@@ -1,1 +1,51 @@
-<p>moderator works!</p>
+<mat-card>
+    <mat-card-title color="primary">
+        Zahtevi za knjige
+    </mat-card-title>
+    <mat-table [dataSource]="bookRequests" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="authors">
+            <mat-header-cell *matHeaderCellDef> Prezime </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.authors}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="genres">
+            <mat-header-cell *matHeaderCellDef> Zanrovi </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.genres}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="path">
+            <mat-header-cell *matHeaderCellDef> Slika</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <div class="image"><img [src]="element.imagePath" /> </div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="accept">
+            <mat-header-cell *matHeaderCellDef> Prihvati zahtev </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="acceptRequest(element._id)">
+                    <mat-icon>add_box</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="refuse">
+            <mat-header-cell *matHeaderCellDef> Odbaci zahtev </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="refuseRequest(element._id)">
+                    <mat-icon>delete_sweep</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForRequests"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForRequests;"></mat-row>
+
+    </mat-table>
+</mat-card>

@@ -25,7 +25,7 @@
                 <mat-icon>library_add</mat-icon>
             </button>
         </mat-form-field>
-        <mat-list *ngIf="authors.length>0" formControlName="authorList">
+        <mat-list *ngIf="authors.length>0">
             <div mat-subheader>Autori</div>
             <mat-list-item *ngFor="let a of authors">
                 <mat-icon mat-list-icon>book</mat-icon>
@@ -44,7 +44,7 @@
                 Polje mora biti popunjeno!
             </mat-error>
         </mat-form-field>
-        <mat-form-field appearance="outline">
+        <!-- <mat-form-field appearance="outline">
             <mat-label>Odaberite zanrove (maksimalno 3 moguca)</mat-label>
             <mat-select disableRipple multiple formControlName="genres" (selectionChange)="changed()">
                 <mat-option value="Avantura" #avantura [disabled]="genres.length>2 && !genres.includes(avantura.value)">Avantura</mat-option>
@@ -52,6 +52,15 @@
                 <mat-option value="Tragedija" #tragedija [disabled]="genres.length>2 && !genres.includes(tragedija.value)">Tragedija</mat-option>
                 <mat-option value="Drama" #drama [disabled]="genres.length>2 && !genres.includes(drama.value)">Drama</mat-option>
                 <mat-option value="Krimi" #krimi [disabled]="genres.length>2 && !genres.includes(krimi.value)">Krimi</mat-option>
+            </mat-select>
+            <mat-error *ngIf="bookAddForm.get('genres').invalid">
+                Polje mora biti popunjeno!
+            </mat-error>
+        </mat-form-field> -->
+        <mat-form-field appearance="outline">
+            <mat-label>Odaberite zanrove (maksimalno 3 moguca)</mat-label>
+            <mat-select disableRipple multiple formControlName="genres" (selectionChange)="changed()">
+                <mat-option *ngFor="let g of genresFront" [value]="g" #avantura [disabled]="genres.length>2 && !genres.includes(g)">{{g}}</mat-option>
             </mat-select>
             <mat-error *ngIf="bookAddForm.get('genres').invalid">
                 Polje mora biti popunjeno!
