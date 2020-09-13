@@ -19,6 +19,7 @@ import { MatNativeDateModule } from "@angular/material/core";
 import { MatListModule } from "@angular/material/list";
 import { MatSelectModule } from "@angular/material/select";
 import { MatTableModule } from "@angular/material/table";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './user/login/login.component';
@@ -38,6 +39,8 @@ import { LogoutComponent } from './user/logout/logout.component';
 import { AdminComponent } from './user/admin/admin.component';
 import { BookConfigureComponent } from './books/book-configure/book-configure.component';
 import { ModeratorComponent } from './user/moderator/moderator.component';
+import { StarRatingComponent } from './books/star-rating/star-rating.component';
+import { CommentConfigureComponent } from './books/comment-configure/comment-configure.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +60,9 @@ import { ModeratorComponent } from './user/moderator/moderator.component';
     LogoutComponent,
     AdminComponent,
     BookConfigureComponent,
-    ModeratorComponent
+    ModeratorComponent,
+    StarRatingComponent,
+    CommentConfigureComponent
   ],
   imports: [
     BrowserModule,
@@ -76,6 +81,7 @@ import { ModeratorComponent } from './user/moderator/moderator.component';
     MatNativeDateModule,
     MatListModule,
     MatTableModule,
+    MatProgressBarModule,
     NgxCaptchaModule,
     HttpClientModule
   ],

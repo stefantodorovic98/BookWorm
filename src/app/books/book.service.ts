@@ -6,6 +6,8 @@ import { Find } from './models/find.model';
 import { Router } from '@angular/router';
 
 import { Genre } from './models/genre';
+import { UserBook } from './models/userBook.model';
+import { Comment } from './models/comment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +23,10 @@ export class BookService {
   private addGenreListener = new Subject<string>();
   private getGenresListener = new Subject<Genre[]>();
   private deleteGenreListener = new Subject<string>();
+  private userBookListener = new Subject<UserBook>();
+  private userBookReqListener = new Subject<string>();
+  private userCommentListener = new Subject<Comment>();
+  private configureCommentListener = new Subject<string>();
 
   getBookListListener(){
     return this.bookListListener.asObservable();
@@ -48,6 +54,22 @@ export class BookService {
 
   getDeleteGenreListener(){
     return this.deleteGenreListener.asObservable();
+  }
+
+  getUserBookListener(){
+    return this.userBookListener.asObservable();
+  }
+
+  getUserBookReqListener(){
+    return this.userBookReqListener.asObservable();
+  }
+
+  getUserCommentListener(){
+    return this.userCommentListener.asObservable();
+  }
+
+  getConfigureCommentListener(){
+    return this.configureCommentListener.asObservable();
   }
 
   getBooks(){
@@ -209,5 +231,141 @@ export class BookService {
         this.deleteGenreListener.next(error.error.message);
       });
   }
+
+  getUserBook(idUser: number, idBook: number){
+    let data: UserBook = {
+      _id: null,idUser: idUser, idBook: idBook, read: "0", wait: "0", currRead: "0", currPage: 0, maxPage: 0, statusMessage: ""
+    };
+    this.http.post<{message:string, data: UserBook}>('http://localhost:3000/api/books/getUserBook', data)
+    .subscribe((responseData) => {
+      if(!responseData.data){
+        this.userBookListener.next(null);
+      }else{
+        this.userBookListener.next({...responseData.data});
+      }
+
+    });
+  }
+
+  addBookRead(idUser: number, idBook: number, read: string, wait: string, currRead: string, currPage: number,
+     maxPage: number, statusMessage: string){
+    let data: UserBook = {
+      _id: null, idUser: idUser, idBook: idBook, read: read, wait: wait, currRead: currRead, currPage: currPage,
+       maxPage: maxPage, statusMessage: statusMessage
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/books/addBookData', data)
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+        window.location.reload();
+      }, error => {
+        this.userBookReqListener.next(error.error.message);
+      });
+  }
+
+  addBookList(idUser: number, idBook: number, read: string, wait: string, currRead: string, currPage: number,
+     maxPage: number, statusMessage: string){
+    let data: UserBook = {
+      _id: null,idUser: idUser, idBook: idBook, read: read, wait: wait, currRead: currRead, currPage: currPage,
+       maxPage: maxPage, statusMessage: statusMessage
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/books/addBookData', data)
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+        window.location.reload();
+      }, error => {
+        this.userBookReqListener.next(error.error.message);
+      });
+  }
+
+  addBookCurrReading(idUser: number, idBook: number, read: string, wait: string, currRead: string, currPage: number,
+    maxPage: number, statusMessage: string){
+      let data: UserBook = {
+        _id: null,idUser: idUser, idBook: idBook, read: read, wait: wait, currRead: currRead, currPage: currPage,
+         maxPage: maxPage, statusMessage: statusMessage
+      };
+      this.http.post<{message:string}>('http://localhost:3000/api/books/addBookData', data)
+        .subscribe((responseData) => {
+          console.log(responseData.message);
+          window.location.reload();
+        }, error => {
+          this.userBookReqListener.next(error.error.message);
+        });
+    }
+
+  updateCurrReading(idUser: number, idBook: number, currPage: number, maxPage: number){
+    let data: UserBook = {
+      _id: null,idUser: idUser, idBook: idBook, read: "", wait: "", currRead: "", currPage: currPage,
+       maxPage: maxPage, statusMessage: ""
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/books/updateCurrReadData', data)
+        .subscribe((responseData) => {
+          console.log(responseData.message);
+          window.location.reload();
+        }, error => {
+          this.userBookReqListener.next(error.error.message);
+        });
+  }
+
+  removeBookFromWaitingList(idUser: number, idBook: number){
+    let data: UserBook = {
+      _id: null,idUser: idUser, idBook: idBook, read: "0", wait: "0", currRead: "0", currPage: 0, maxPage: 0, statusMessage: ""
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/books/removeBookFromWaitingList', data)
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+        window.location.reload();
+      }, error => {
+        this.userBookReqListener.next(error.error.message);
+      });
+  }
+
+  addComment(idUser: number, username: string, idBook: number, rating: number, comment: string){
+    let data: Comment = {
+      _id: null, idUser: idUser, username: username, idBook: idBook, rating: rating, comment: comment
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/books/addComment', data)
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+        window.location.reload();
+  });
+  }
+
+  getComment(idUser: number, idBook: number){
+    let data: Comment = {
+      _id: null, idUser: idUser, username: "", idBook: idBook, rating: 0, comment: ""
+    };
+    this.http.post<{message:string, data: Comment}>('http://localhost:3000/api/books/getComment', data)
+    .subscribe((responseData) => {
+      if(!responseData.data){
+        this.userCommentListener.next(null);
+      }else{
+        this.userCommentListener.next({...responseData.data});
+      }
+    });
+  }
+
+  getCommentById(id: number){
+    this.http.get<{message:string, data: Comment}>('http://localhost:3000/api/books/getCommentById/'+id)
+    .subscribe((responseData) => {
+      if(!responseData.data){
+        this.userCommentListener.next(null);
+      }else{
+        this.userCommentListener.next({...responseData.data});
+      }
+    });
+  }
+
+  configureComment(_id: number, rating: number, comment: string, idBook: number){
+    let data: Comment = {
+      _id: _id, idUser: 0, username: "", idBook: 0, rating: rating, comment: comment
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/books/configureComment', data)
+      .subscribe((responseData) => {
+        this.router.navigate(['/bookInfo', idBook]);
+    }, error => {
+        this.configureCommentListener.next(error.error.message);
+    });
+  }
+
 
 }

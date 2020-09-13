@@ -15,6 +15,7 @@ import { LogoutComponent } from './user/logout/logout.component';
 import { AdminComponent } from './user/admin/admin.component';
 import { BookConfigureComponent } from './books/book-configure/book-configure.component';
 import { ModeratorComponent } from './user/moderator/moderator.component';
+import { CommentConfigureComponent } from './books/comment-configure/comment-configure.component';
 
 const routes: Routes = [
   {path:"", component:LoginComponent},
@@ -31,7 +32,8 @@ const routes: Routes = [
   {path:"newPassword/:id", component: NewPasswordComponent},
   {path:"admin/:id", component: AdminComponent},
   {path:"bookConfigure/:id", component: BookConfigureComponent},
-  {path:"moderator/:id", component: ModeratorComponent}
+  {path:"moderator/:id", component: ModeratorComponent},
+  {path:"commentConfigure/:id", component: CommentConfigureComponent}
 ];
 
 @NgModule({

@@ -65,4 +65,110 @@
             </td>
         </tr>
     </table>
+    <table *ngIf="loggedUser">
+        <tr>
+            <td class="status">Status</td>
+            <td>Procitano</td>
+            <td>Dodaj na listu</td>
+            <td>Ukloni s liste</td>
+            <td>Trenutno citam</td>
+        </tr>
+        <tr>
+            <td>
+                <span *ngIf="userBook">{{userBook.statusMessage}}</span>
+            </td>
+            <td>
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" *ngIf="(privilege==='A' || privilege==='M' || privilege==='U') && !readActive && finishReading" (click)="addReadBook()">
+                  <mat-icon>book</mat-icon>
+                </button>
+            </td>
+            <td>
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" *ngIf="(privilege==='A' || privilege==='M' || privilege==='U') && !waitActive && !readActive" (click)="addBookToList()">
+                  <mat-icon>library_add</mat-icon>
+                </button>
+            </td>
+            <td>
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" *ngIf="(privilege==='A' || privilege==='M' || privilege==='U') && waitActive && !readActive" (click)="removeBookFromList()">
+                  <mat-icon>delete_forever</mat-icon>
+                </button>
+            </td>
+            <td>
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" *ngIf="(privilege==='A' || privilege==='M' || privilege==='U') && !currReadActive && !readActive" (click)="addBookCurrReading()">
+                  <mat-icon>library_books</mat-icon>
+                </button>
+            </td>
+        </tr>
+    </table>
+    <mat-card *ngIf="userBook && userBook.currRead==='1'">
+        <form (submit)="updateValues()" [formGroup]="currReadingForm">
+            <mat-form-field>
+                <mat-label>Trenutna strana</mat-label>
+                <input matInput type="text" formControlName="currPage">
+                <mat-error *ngIf="currReadingForm.get('currPage').invalid">
+                    Polje mora biti popunjeno!
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Poslednja strana</mat-label>
+                <input matInput type="text" formControlName="maxPage">
+                <mat-error *ngIf="currReadingForm.get('maxPage').invalid">
+                    Polje mora biti popunjeno!
+                </mat-error>
+            </mat-form-field>
+            <mat-progress-bar mode="determinate" [value]="counter" [bufferValue]="maxPage">
+            </mat-progress-bar>
+            <br>
+            <button mat-raised-button color="primary" type="submit">Azuriraj</button>
+        </form>
+    </mat-card>
+    <mat-card *ngIf="conditionForCommentPages">
+        <mat-card *ngIf="!comment && userBook.currRead!=='1' && userBook.read!=='1'">
+            <p>Niste ostavili komentar</p>
+        </mat-card>
+        <mat-card *ngIf="!comment && (userBook.currRead==='1' || userBook.read==='1')">
+            <mat-card-title>Napisi komentar</mat-card-title>
+            <form (submit)="addComment()" [formGroup]="commentForm">
+                <div class="App">
+                    <div class="flex-container">
+                        <ng-container *ngFor="let star of stars">
+                            <app-star-rating [starId]="star" [rating]="hoverState || rating" (enter)="enter($event)" (leave)="leave($event)" (bigClick)="updateRating(star)">
+                            </app-star-rating>
+                        </ng-container>
+                    </div>
+                </div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Komentar</mat-label>
+                    <textarea matInput rows="4" formControlName="comment" placeholder="Napisite komentar"></textarea>
+                </mat-form-field>
+                <mat-error *ngIf="commentMessage!=null" style="color:black">
+                    {{commentMessage}}
+                </mat-error>
+                <button mat-raised-button color="primary" type="submit">Dodaj komentar</button>
+            </form>
+        </mat-card>
+        <mat-card *ngIf="comment">
+            <table class="comment-configure">
+                <tr>
+                    <td>Urediti stari komentar</td>
+                    <td>
+                        <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="configureComment()">
+                    <mat-icon>build</mat-icon>
+                  </button>
+                    </td>
+                </tr>
+            </table>
+            Autor: {{comment.username}} <br>
+            <div class="flex-container">
+                <ng-container *ngFor="let star of stars">
+                    <app-star-rating [starId]="star" [rating]="configureRating">
+                    </app-star-rating>
+                </ng-container>
+            </div>
+            Komentar: {{comment.comment}}
+        </mat-card>
+    </mat-card>
+    <mat-error *ngIf="message!=null" style="color:black">
+        {{message}}
+    </mat-error>
+    <br>
 </mat-card>

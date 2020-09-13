@@ -62,4 +62,4 @@
 
 </mat-table>
 
-<app-book-add *ngIf="(books.length==0 || logUser.privilege==='A') && isLogged"></app-book-add>
+<app-book-add *ngIf="(books.length==0 || (logUser && logUser.privilege==='A')) && isLogged"></app-book-add>

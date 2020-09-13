@@ -1,5 +1,5 @@
 mat-card {
-    width: 60%;
+    width: 80%;
     margin: 20px auto;
     background-color: rgba(193, 66, 66, 0.7);
     color: white;
@@ -53,4 +53,30 @@ table {
 
 .image-preview img {
     height: 100%;
+}
+
+.status {
+    width: 30%;
+}
+
+.progress-bar {
+    color: white;
+}
+
+.App {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.comment-configure {
+    width: 40%;
+    text-align: center;
+    margin: auto auto;
 }

@@ -178,6 +178,7 @@ router.post("/login", (req, res, next) => {
                 res.status(500).json({
                     message: "Unesen je nepostojeci username!",
                     _id: null,
+                    username: null,
                     privilege: null
                 });
             } else {
@@ -186,18 +187,21 @@ router.post("/login", (req, res, next) => {
                     res.status(500).json({
                         message: "Nije dobra lozinka!",
                         _id: null,
+                        username: null,
                         privilege: null
                     });
                 } else if (user.allowed === "0") {
                     res.status(500).json({
                         message: "Nalog nije odobren od strane administratora!",
                         _id: null,
+                        username: null,
                         privilege: null
                     });
                 } else {
                     res.status(200).json({
                         message: " ",
                         _id: user._id,
+                        username: user.username,
                         privilege: user.privilege
                     })
                 }
@@ -346,6 +350,7 @@ router.put("/newPassword/:id", (req, res, next) => {
                 res.status(500).json({
                     message: "Nepostojeci korisnik!",
                     _id: null,
+                    username: null,
                     privilege: null
                 });
             } else {
@@ -358,12 +363,14 @@ router.put("/newPassword/:id", (req, res, next) => {
                                     res.status(200).json({
                                         message: "Ok",
                                         _id: user._id,
+                                        username: user.username,
                                         privilege: user.privilege
                                     });
                                 } else {
                                     res.status(500).json({
                                         message: "Nijedno polje nije promenjeno",
                                         _id: null,
+                                        username: null,
                                         privilege: null
                                     })
                                 }
@@ -372,6 +379,7 @@ router.put("/newPassword/:id", (req, res, next) => {
                                 res.status(500).json({
                                     message: "Problem s promenom lozinke",
                                     _id: null,
+                                    username: null,
                                     privilege: nulls
                                 });
                             });

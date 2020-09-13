@@ -106,10 +106,10 @@ export class UserService {
     let auth : Auth = {
       username: username, password: password
     };
-    this.http.post<{message:string, _id:number, privilege:string}>('http://localhost:3000/api/user/login', auth)
+    this.http.post<{message:string, _id:number, username: string, privilege: string}>('http://localhost:3000/api/user/login', auth)
       .subscribe((response) => {
         let loggedUser: LoggedUser = {
-          _id:response._id, privilege:response.privilege
+          _id:response._id, username: response.username, privilege:response.privilege
         }
         localStorage.setItem("logged",JSON.stringify(loggedUser));
         this.userLoginListener.next(response.message);
@@ -192,10 +192,10 @@ export class UserService {
     let auth : Auth = {
       username: null, password: password
     };
-    this.http.put<{message:string, _id:number, privilege:string}>('http://localhost:3000/api/user/newPassword/'+id,auth)
+    this.http.put<{message:string, _id:number, username: string, privilege:string}>('http://localhost:3000/api/user/newPassword/'+id,auth)
     .subscribe((response) => {
       let loggedUser: LoggedUser = {
-        _id:response._id, privilege:response.privilege
+        _id:response._id, username: response.username, privilege:response.privilege
       }
       localStorage.setItem("logged",JSON.stringify(loggedUser));
       this.newPasswordListener.next(response.message);

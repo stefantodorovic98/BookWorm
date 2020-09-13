@@ -4,6 +4,8 @@ const fs = require("fs");
 
 const Books = require('../models/book');
 const Genre = require('../models/genre');
+const UserBooks = require('../models/userBook');
+const Comment = require('../models/comment');
 
 const router = express.Router();
 
@@ -304,7 +306,7 @@ router.post("/addGenre", (req, res, next) => {
             res.status(500).json({
                 message: "Zanr vec postoji"
             })
-        });;
+        });
 });
 
 router.get("/getGenres", (req, res, next) => {
@@ -347,6 +349,193 @@ router.post("/deleteGenre", (req, res, next) => {
         });
 });
 
+router.post("/getUserBook", (req, res, next) => {
+    UserBooks.findOne({ idUser: req.body.idUser, idBook: req.body.idBook })
+        .then(userBook => {
+            if (!userBook) {
+                res.status(200).json({
+                    message: "Sve je ok",
+                    data: null
+                });
+            } else {
+                res.status(200).json({
+                    message: "Sve je ok",
+                    data: userBook
+                });
+            }
+
+        });
+});
+
+router.post("/addBookData", (req, res, next) => {
+    UserBooks.findOne({ idUser: req.body.idUser, idBook: req.body.idBook })
+        .then(result => {
+            if (!result) {
+                const userBook = new UserBooks({
+                    idUser: req.body.idUser,
+                    idBook: req.body.idBook,
+                    read: req.body.read,
+                    wait: req.body.wait,
+                    currRead: req.body.currRead,
+                    currPage: req.body.currPage,
+                    maxPage: req.body.maxPage,
+                    statusMessage: req.body.statusMessage
+                });
+                userBook.save()
+                    .then(newUserBook => {
+                        res.status(201).json({
+                            message: "Ok"
+                        });
+                    })
+                    .catch(error => {
+                        res.status(500).json({
+                            message: "Problem s azuriranjem"
+                        })
+                    });;
+            } else {
+                UserBooks.updateOne({ idUser: req.body.idUser, idBook: req.body.idBook }, {
+                        read: req.body.read,
+                        wait: req.body.wait,
+                        currRead: req.body.currRead,
+                        currPage: req.body.currPage,
+                        maxPage: req.body.maxPage,
+                        statusMessage: req.body.statusMessage
+                    })
+                    .then(result => {
+                        if (result.nModified > 0) {
+                            res.status(200).json({
+                                message: "Ok"
+                            });
+                        } else {
+                            res.status(500).json({
+                                message: "Nijedno polje nije promenjeno"
+                            })
+                        }
+                    })
+                    .catch(error => {
+                        res.status(500).json({
+                            message: "Problem s azuriranjem"
+                        })
+                    });
+            }
+        });
+});
+
+router.post("/updateCurrReadData", (req, res, next) => {
+    UserBooks.updateOne({ idUser: req.body.idUser, idBook: req.body.idBook }, {
+            currPage: req.body.currPage,
+            maxPage: req.body.maxPage,
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.post("/removeBookFromWaitingList", (req, res, next) => {
+    UserBooks.deleteOne({ idUser: req.body.idUser, idBook: req.body.idBook })
+        .then(result => {
+            if (result.deletedCount > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.post("/addComment", (req, res, next) => {
+    const comment = new Comment({
+        idUser: req.body.idUser,
+        username: req.body.username,
+        idBook: req.body.idBook,
+        rating: req.body.rating,
+        comment: req.body.comment
+    });
+    comment.save()
+        .then(newComment => {
+            console.log(newComment);
+            res.status(201).json({
+                message: "Ok"
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Komentar vec postoji"
+            })
+        });
+});
+
+router.post("/getComment", (req, res, next) => {
+    Comment.findOne({ idUser: req.body.idUser, idBook: req.body.idBook })
+        .then(comment => {
+            if (!comment) {
+                res.status(200).json({
+                    message: "Sve je ok",
+                    data: null
+                });
+            } else {
+                res.status(200).json({
+                    message: "Sve je ok",
+                    data: comment
+                });
+            }
+
+        });
+});
+
+router.get("/getCommentById/:id", (req, res, next) => {
+    Comment.findById(req.params.id)
+        .then(comment => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: comment
+            });
+        });
+});
+
+router.post("/configureComment", (req, res, next) => {
+    Comment.updateOne({ _id: req.body._id }, {
+            rating: req.body.rating,
+            comment: req.body.comment
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });;
+});
 
 
 module.exports = router;
