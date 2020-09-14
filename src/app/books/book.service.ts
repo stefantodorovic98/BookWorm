@@ -29,6 +29,11 @@ export class BookService {
   private userCommentListener = new Subject<Comment>();
   private configureCommentListener = new Subject<string>();
 
+  private getAllBooksUserReadListener = new Subject<{books: UserBook[], count: number}>();
+  private getAllBooksUserCurrReadListener = new Subject<{books: UserBook[], count: number}>();
+  private getAllBooksUserWaitListener = new Subject<{books: UserBook[], count: number}>();
+  private getAllBooksUserReadNoPaginatorListener = new Subject<UserBook[]>();
+
   getBookListListener(){
     return this.bookListListener.asObservable();
   }
@@ -71,6 +76,22 @@ export class BookService {
 
   getConfigureCommentListener(){
     return this.configureCommentListener.asObservable();
+  }
+
+  getGetAllBooksUserReadListener(){
+    return this.getAllBooksUserReadListener.asObservable();
+  }
+
+  getGetAllBooksUserCurrReadListener(){
+    return this.getAllBooksUserCurrReadListener.asObservable();
+  }
+
+  getGetAllBooksUserWaitListener(){
+    return this.getAllBooksUserWaitListener.asObservable();
+  }
+
+  getGetAllBooksUserReadNoPaginatorListener(){
+    return this.getAllBooksUserReadNoPaginatorListener.asObservable();
   }
 
   getBooks(){
@@ -386,5 +407,35 @@ export class BookService {
     });
   }
 
+  getAllBooksUserRead(id: number, booksPerPage: number, currentPage: number){
+    const queryParams = `?pagesize=${booksPerPage}&currentpage=${currentPage}`;
+    this.http.get<{message:string, data: UserBook[], count: number}>('http://localhost:3000/api/books/getAllBooksUserRead/' + id + queryParams)
+    .subscribe((responseData) => {
+      this.getAllBooksUserReadListener.next({books: responseData.data, count: responseData.count});
+    });
+  }
+
+  getAllBooksUserCurrRead(id: number, booksPerPage: number, currentPage: number){
+    const queryParams = `?pagesize=${booksPerPage}&currentpage=${currentPage}`;
+    this.http.get<{message:string, data: UserBook[], count: number}>('http://localhost:3000/api/books/getAllBooksUserCurrRead/' + id + queryParams)
+    .subscribe((responseData) => {
+      this.getAllBooksUserCurrReadListener.next({books: responseData.data, count: responseData.count});
+    });
+  }
+
+  getAllBooksUserWait(id: number, booksPerPage: number, currentPage: number){
+    const queryParams = `?pagesize=${booksPerPage}&currentpage=${currentPage}`;
+    this.http.get<{message:string, data: UserBook[], count: number}>('http://localhost:3000/api/books/getAllBooksUserWait/' + id + queryParams)
+    .subscribe((responseData) => {
+      this.getAllBooksUserWaitListener.next({books: responseData.data, count: responseData.count});
+    });
+  }
+
+  getAllBooksUserReadNoPaginator(id: number){
+    this.http.get<{message:string, data: UserBook[]}>('http://localhost:3000/api/books/getAllBooksUserReadNoPaginator/'+id)
+    .subscribe((responseData) => {
+      this.getAllBooksUserReadNoPaginatorListener.next([...responseData.data]);
+    });
+  }
 
 }

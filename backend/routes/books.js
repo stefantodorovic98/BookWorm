@@ -615,4 +615,80 @@ router.post("/configureMark", (req, res, next) => {
 });
 
 
+router.get("/getAllBooksUserRead/:id", (req, res, next) => {
+    const pageSize = new Number(req.query.pagesize);
+    const currentPage = new Number(req.query.currentpage);
+    const postQuery = UserBooks.find({ idUser: req.params.id, read: "1" });
+    if (pageSize && currentPage) {
+        postQuery
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize);
+    }
+    postQuery
+        .then(books => {
+            UserBooks.count({ idUser: req.params.id, read: "1" })
+                .then(count => {
+                    res.status(200).json({
+                        message: "Sve je ok",
+                        data: books,
+                        count: count
+                    });
+                });
+        });
+});
+
+router.get("/getAllBooksUserCurrRead/:id", (req, res, next) => {
+    const pageSize = new Number(req.query.pagesize);
+    const currentPage = new Number(req.query.currentpage);
+    const postQuery = UserBooks.find({ idUser: req.params.id, currRead: "1" });
+    if (pageSize && currentPage) {
+        postQuery
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize);
+    }
+    postQuery
+        .then(books => {
+            UserBooks.count({ idUser: req.params.id, currRead: "1" })
+                .then(count => {
+                    res.status(200).json({
+                        message: "Sve je ok",
+                        data: books,
+                        count: count
+                    });
+                });
+        });
+});
+
+router.get("/getAllBooksUserWait/:id", (req, res, next) => {
+    const pageSize = new Number(req.query.pagesize);
+    const currentPage = new Number(req.query.currentpage);
+    const postQuery = UserBooks.find({ idUser: req.params.id, wait: "1" });
+    if (pageSize && currentPage) {
+        postQuery
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize);
+    }
+    postQuery
+        .then(books => {
+            UserBooks.count({ idUser: req.params.id, wait: "1" })
+                .then(count => {
+                    res.status(200).json({
+                        message: "Sve je ok",
+                        data: books,
+                        count: count
+                    });
+                });
+        });
+});
+
+router.get("/getAllBooksUserReadNoPaginator/:id", (req, res, next) => {
+    UserBooks.find({ idUser: req.params.id, read: "1" })
+        .then(books => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: books
+            });
+        });
+});
+
 module.exports = router;

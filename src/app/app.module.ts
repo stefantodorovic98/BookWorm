@@ -20,6 +20,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatSelectModule } from "@angular/material/select";
 import { MatTableModule } from "@angular/material/table";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatPaginatorModule } from "@angular/material/paginator";
 
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './user/login/login.component';
@@ -82,6 +83,7 @@ import { CommentConfigureComponent } from './books/comment-configure/comment-con
     MatListModule,
     MatTableModule,
     MatProgressBarModule,
+    MatPaginatorModule,
     NgxCaptchaModule,
     HttpClientModule
   ],

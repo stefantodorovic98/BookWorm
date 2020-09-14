@@ -73,3 +73,105 @@
         </tr>
     </table>
 </mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">
+        Procitane knjige
+    </mat-card-title>
+    <mat-table [dataSource]="userReadBooks" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button [routerLink]="['/bookInfo',element.idBook]">
+                  {{element.title}}
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="authors">
+            <mat-header-cell *matHeaderCellDef> Autori </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.authors}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="genres">
+            <mat-header-cell *matHeaderCellDef> Zanrovi </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.genres}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForUserReadBooks"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForUserReadBooks;"></mat-row>
+    </mat-table>
+    <mat-paginator [length]="totalReadBooks" [pageSize]="readBooksPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPageForReadBooks($event)"></mat-paginator>
+</mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">
+        Knjige koje se trenutno citaju
+    </mat-card-title>
+    <mat-table [dataSource]="userCurrReadBooks" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button [routerLink]="['/bookInfo',element.idBook]">
+                  {{element.title}}
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="authors">
+            <mat-header-cell *matHeaderCellDef> Autori </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.authors}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="genres">
+            <mat-header-cell *matHeaderCellDef> Zanrovi </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.genres}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForUserCurrReadBooks"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForUserCurrReadBooks;"></mat-row>
+    </mat-table>
+    <mat-paginator [length]="totalCurrReadBooks" [pageSize]="currReadBooksPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPageForCurrReadBooks($event)"></mat-paginator>
+</mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">
+        Knjige na listi za citanje
+    </mat-card-title>
+    <mat-table [dataSource]="userWaitBooks" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button [routerLink]="['/bookInfo',element.idBook]">
+                  {{element.title}}
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="authors">
+            <mat-header-cell *matHeaderCellDef> Autori </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.authors}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="genres">
+            <mat-header-cell *matHeaderCellDef> Zanrovi </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.genres}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="remove">
+            <mat-header-cell *matHeaderCellDef> Izbaci iz liste </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="removeBookFromList(element.idUser, element.idBook)">
+                    <mat-icon>clear</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForUserWaitBooks"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForUserWaitBooks;"></mat-row>
+    </mat-table>
+    <mat-paginator [length]="totalWaitBooks" [pageSize]="waitBooksPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPageForWaitBooks($event)"></mat-paginator>
+</mat-card>
