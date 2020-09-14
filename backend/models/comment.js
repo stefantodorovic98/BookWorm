@@ -6,6 +6,8 @@ const commentSchema = mongoose.Schema({
     idUser: { type: ObjectId, required: true },
     username: { type: String, required: true },
     idBook: { type: ObjectId, required: true },
+    title: { type: String, required: true },
+    authors: { type: String, required: true },
     rating: { type: Number, required: true },
     comment: { type: String }
 });

@@ -7,6 +7,7 @@ import { LoggedUser } from 'src/app/user/models/loggedUser.model';
 import { UserService } from 'src/app/user/user.service';
 import { UserBook } from '../models/userBook.model';
 import { Comment } from '../models/comment.model';
+import { MarkAddUpdate } from '../models/markAddUpdate.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -136,13 +137,15 @@ export class BookInfoComponent implements OnInit, OnDestroy {
 
   addReadBook(){
     if(this.loggedUser){
-      this.bookService.addBookRead(this.loggedUser._id, this.id, "1", "0", "0", this.currPage, this.maxPage, "Knjiga je procitana");
+      this.bookService.addBookRead(this.loggedUser._id, this.id, this.book.title, this.book.authors, this.book.genres,
+         "1", "0", "0", this.currPage, this.maxPage, "Knjiga je procitana");
     }
   }
 
   addBookToList(){
     if(this.loggedUser){
-      this.bookService.addBookList(this.loggedUser._id, this.id, "0", "1", "0", this.currPage, this.maxPage, "Knjiga je dodata u listu");
+      this.bookService.addBookList(this.loggedUser._id, this.id, this.book.title, this.book.authors, this.book.genres,
+         "0", "1", "0", this.currPage, this.maxPage, "Knjiga je dodata u listu");
     }
   }
 
@@ -155,8 +158,8 @@ export class BookInfoComponent implements OnInit, OnDestroy {
 
   addBookCurrReading(){
     if(this.loggedUser){
-      this.bookService.addBookCurrReading(this.loggedUser._id, this.id, "0", "0", "1",
-      this.currPage, this.maxPage, "Knjiga se cita trenutno");
+      this.bookService.addBookCurrReading(this.loggedUser._id, this.id, this.book.title, this.book.authors, this.book.genres,
+          "0", "0", "1", this.currPage, this.maxPage, "Knjiga se cita trenutno");
     }
   }
 
@@ -194,7 +197,12 @@ export class BookInfoComponent implements OnInit, OnDestroy {
     let arr: string[] = this.commentForm.value.comment.split(/\s+/g);
     if(arr.length<=1000){
       if(this.rating!=0) {
-        this.bookService.addComment(this.loggedUser._id, this.loggedUser.username, this.id, this.rating, this.commentForm.value.comment);
+        this.bookService.addComment(this.loggedUser._id, this.loggedUser.username, this.id, this.book.title, this.book.authors,
+       this.rating, this.commentForm.value.comment);
+        let mark: MarkAddUpdate = {
+          idBook: this.id, oldMark: 0, newMark: this.rating
+        };
+        this.bookService.addMark(mark);
       }else{
         this.commentMessage="Morate oceniti."
       }
@@ -205,6 +213,6 @@ export class BookInfoComponent implements OnInit, OnDestroy {
 
   configureComment(){
     this.router.navigate(['/commentConfigure', this.comment._id]);
-}
+  }
 
 }

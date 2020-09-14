@@ -7,5 +7,7 @@ export interface Book {
   genres: string;
   description: string;
   averageMark: number;
+  sumMark: number;
+  numMark: number;
   allowed: string;
 }

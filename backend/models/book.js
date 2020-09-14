@@ -8,6 +8,8 @@ const bookSchema = mongoose.Schema({
     genres: { type: String, required: true },
     description: { type: String, required: true },
     averageMark: { type: Number, required: true },
+    sumMark: { type: Number, required: true },
+    numMark: { type: Number, required: true },
     allowed: { type: String, required: true }
 });
 

@@ -3,6 +3,8 @@ export interface Comment {
   idUser: number;
   username: string;
   idBook: number;
+  title: string;
+  authors: string;
   rating: number;
   comment: string;
 }

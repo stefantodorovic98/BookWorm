@@ -5,6 +5,9 @@ const uniqueValidator = require('mongoose-unique-validator');
 const userBookSchema = mongoose.Schema({
     idUser: { type: ObjectId, required: true },
     idBook: { type: ObjectId, required: true },
+    title: { type: String, required: true },
+    authors: { type: String, required: true },
+    genres: { type: String, required: true },
     read: { type: String, required: true },
     wait: { type: String, required: true },
     currRead: { type: String, required: true },

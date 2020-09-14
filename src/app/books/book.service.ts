@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Genre } from './models/genre';
 import { UserBook } from './models/userBook.model';
 import { Comment } from './models/comment.model';
+import { MarkAddUpdate } from './models/markAddUpdate.model';
 
 @Injectable({
   providedIn: 'root'
@@ -98,7 +99,7 @@ export class BookService {
       const book: Book = {
         _id:null, imagePath:null, title:title, authors: JSON.stringify(authors),
          issueDate: issueDate, genres: JSON.stringify(genres), description: description,
-         averageMark: 0, allowed: allowed
+         averageMark: 0, sumMark: 0, numMark: 0, allowed: allowed
       };
       this.http.post<{message:string}>('http://localhost:3000/api/books/addBookNoImage', book)
         .subscribe((responseData) => {
@@ -171,7 +172,7 @@ export class BookService {
       const book: Book = {
         _id:id, imagePath:preview, title:title, authors: JSON.stringify(authors),
          issueDate: issueDate, genres: JSON.stringify(genres), description: description,
-         averageMark: averageMark, allowed: allowed
+         averageMark: averageMark,  sumMark: 0, numMark: 0, allowed: allowed
       };
       this.http.put<{message:string}>('http://localhost:3000/api/books/updateBookOldImage/'+id, book)
         .subscribe((responseData) => {
@@ -186,7 +187,7 @@ export class BookService {
       const book: Book = {
         _id:id, imagePath:null, title:title, authors: JSON.stringify(authors),
          issueDate: issueDate, genres: JSON.stringify(genres), description: description,
-         averageMark: averageMark, allowed: allowed
+         averageMark: averageMark,  sumMark: 0, numMark: 0, allowed: allowed
       };
       this.http.put<{message:string}>('http://localhost:3000/api/books/updateBookDefaultImage/'+id, book)
         .subscribe((responseData) => {
@@ -234,7 +235,8 @@ export class BookService {
 
   getUserBook(idUser: number, idBook: number){
     let data: UserBook = {
-      _id: null,idUser: idUser, idBook: idBook, read: "0", wait: "0", currRead: "0", currPage: 0, maxPage: 0, statusMessage: ""
+      _id: null,idUser: idUser, idBook: idBook, title: "", authors: "", genres: "",
+       read: "0", wait: "0", currRead: "0", currPage: 0, maxPage: 0, statusMessage: ""
     };
     this.http.post<{message:string, data: UserBook}>('http://localhost:3000/api/books/getUserBook', data)
     .subscribe((responseData) => {
@@ -247,11 +249,11 @@ export class BookService {
     });
   }
 
-  addBookRead(idUser: number, idBook: number, read: string, wait: string, currRead: string, currPage: number,
-     maxPage: number, statusMessage: string){
+  addBookRead(idUser: number, idBook: number, title: string, authors: string, genres: string,
+     read: string, wait: string, currRead: string, currPage: number, maxPage: number, statusMessage: string){
     let data: UserBook = {
-      _id: null, idUser: idUser, idBook: idBook, read: read, wait: wait, currRead: currRead, currPage: currPage,
-       maxPage: maxPage, statusMessage: statusMessage
+      _id: null, idUser: idUser, idBook: idBook, title: title, authors: authors, genres: genres,
+       read: read, wait: wait, currRead: currRead, currPage: currPage, maxPage: maxPage, statusMessage: statusMessage
     };
     this.http.post<{message:string}>('http://localhost:3000/api/books/addBookData', data)
       .subscribe((responseData) => {
@@ -262,11 +264,11 @@ export class BookService {
       });
   }
 
-  addBookList(idUser: number, idBook: number, read: string, wait: string, currRead: string, currPage: number,
-     maxPage: number, statusMessage: string){
+  addBookList(idUser: number, idBook: number, title: string, authors: string, genres: string,
+     read: string, wait: string, currRead: string, currPage: number, maxPage: number, statusMessage: string){
     let data: UserBook = {
-      _id: null,idUser: idUser, idBook: idBook, read: read, wait: wait, currRead: currRead, currPage: currPage,
-       maxPage: maxPage, statusMessage: statusMessage
+      _id: null,idUser: idUser, idBook: idBook, title: title, authors: authors, genres: genres,
+       read: read, wait: wait, currRead: currRead, currPage: currPage, maxPage: maxPage, statusMessage: statusMessage
     };
     this.http.post<{message:string}>('http://localhost:3000/api/books/addBookData', data)
       .subscribe((responseData) => {
@@ -277,11 +279,11 @@ export class BookService {
       });
   }
 
-  addBookCurrReading(idUser: number, idBook: number, read: string, wait: string, currRead: string, currPage: number,
-    maxPage: number, statusMessage: string){
+  addBookCurrReading(idUser: number, idBook: number, title: string, authors: string, genres: string,
+     read: string, wait: string, currRead: string, currPage: number, maxPage: number, statusMessage: string){
       let data: UserBook = {
-        _id: null,idUser: idUser, idBook: idBook, read: read, wait: wait, currRead: currRead, currPage: currPage,
-         maxPage: maxPage, statusMessage: statusMessage
+        _id: null,idUser: idUser, idBook: idBook, title: title, authors: authors, genres: genres,
+         read: read, wait: wait, currRead: currRead, currPage: currPage, maxPage: maxPage, statusMessage: statusMessage
       };
       this.http.post<{message:string}>('http://localhost:3000/api/books/addBookData', data)
         .subscribe((responseData) => {
@@ -294,8 +296,8 @@ export class BookService {
 
   updateCurrReading(idUser: number, idBook: number, currPage: number, maxPage: number){
     let data: UserBook = {
-      _id: null,idUser: idUser, idBook: idBook, read: "", wait: "", currRead: "", currPage: currPage,
-       maxPage: maxPage, statusMessage: ""
+      _id: null,idUser: idUser, idBook: idBook, title: "", authors: "", genres: "",
+       read: "", wait: "", currRead: "", currPage: currPage, maxPage: maxPage, statusMessage: ""
     };
     this.http.post<{message:string}>('http://localhost:3000/api/books/updateCurrReadData', data)
         .subscribe((responseData) => {
@@ -308,7 +310,8 @@ export class BookService {
 
   removeBookFromWaitingList(idUser: number, idBook: number){
     let data: UserBook = {
-      _id: null,idUser: idUser, idBook: idBook, read: "0", wait: "0", currRead: "0", currPage: 0, maxPage: 0, statusMessage: ""
+      _id: null,idUser: idUser, idBook: idBook, title: "", authors: "", genres: "",
+     read: "0", wait: "0", currRead: "0", currPage: 0, maxPage: 0, statusMessage: ""
     };
     this.http.post<{message:string}>('http://localhost:3000/api/books/removeBookFromWaitingList', data)
       .subscribe((responseData) => {
@@ -319,20 +322,28 @@ export class BookService {
       });
   }
 
-  addComment(idUser: number, username: string, idBook: number, rating: number, comment: string){
+  addComment(idUser: number, username: string, idBook: number, title: string, authors: string, rating: number, comment: string){
     let data: Comment = {
-      _id: null, idUser: idUser, username: username, idBook: idBook, rating: rating, comment: comment
+      _id: null, idUser: idUser, username: username, idBook: idBook, title: title, authors: authors, rating: rating, comment: comment
     };
     this.http.post<{message:string}>('http://localhost:3000/api/books/addComment', data)
       .subscribe((responseData) => {
         console.log(responseData.message);
         window.location.reload();
-  });
+    });
+  }
+
+  addMark(mark: MarkAddUpdate){
+    this.http.post<{message:string}>('http://localhost:3000/api/books/addMark', mark)
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+        window.location.reload();
+    });
   }
 
   getComment(idUser: number, idBook: number){
     let data: Comment = {
-      _id: null, idUser: idUser, username: "", idBook: idBook, rating: 0, comment: ""
+      _id: null, idUser: idUser, username: "", idBook: idBook, title: "", authors: "", rating: 0, comment: ""
     };
     this.http.post<{message:string, data: Comment}>('http://localhost:3000/api/books/getComment', data)
     .subscribe((responseData) => {
@@ -357,13 +368,21 @@ export class BookService {
 
   configureComment(_id: number, rating: number, comment: string, idBook: number){
     let data: Comment = {
-      _id: _id, idUser: 0, username: "", idBook: 0, rating: rating, comment: comment
+      _id: _id, idUser: 0, username: "", idBook: 0, title: "", authors: "", rating: rating, comment: comment
     };
     this.http.post<{message:string}>('http://localhost:3000/api/books/configureComment', data)
       .subscribe((responseData) => {
         this.router.navigate(['/bookInfo', idBook]);
     }, error => {
         this.configureCommentListener.next(error.error.message);
+    });
+  }
+
+  configureMark(mark: MarkAddUpdate){
+    this.http.post<{message:string}>('http://localhost:3000/api/books/configureMark', mark)
+    .subscribe((responseData) => {
+      console.log(responseData.message);
+      window.location.reload();
     });
   }
 

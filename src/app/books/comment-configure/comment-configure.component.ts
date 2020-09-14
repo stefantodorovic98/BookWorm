@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BookService } from '../book.service';
 import { Comment } from '../models/comment.model';
+import { MarkAddUpdate } from '../models/markAddUpdate.model';
 
 @Component({
   selector: 'app-comment-configure',
@@ -19,6 +20,7 @@ export class CommentConfigureComponent implements OnInit, OnDestroy {
   comment: Comment;
   message: string = " ";
   commentMessage: string = " ";
+  oldRating: number;
 
   constructor(private route: ActivatedRoute, private bookService: BookService) { }
 
@@ -31,6 +33,7 @@ export class CommentConfigureComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.comment = data;
         this.rating = this.comment.rating;
+        this.oldRating = this.comment.rating;
         this.commentConfigureForm.patchValue({
           comment: this.comment.comment
         });
@@ -65,11 +68,16 @@ export class CommentConfigureComponent implements OnInit, OnDestroy {
   }
 
   onCommentConfigure(){
+    alert(this.oldRating + " " + this.rating)
     this.commentMessage=" ";
     let arr: string[] = this.commentConfigureForm.value.comment.split(/\s+/g);
     if(arr.length<=1000){
       if(this.rating!=0) {
         this.bookService.configureComment(this.id, this.rating, this.commentConfigureForm.value.comment, this.comment.idBook);
+        let mark: MarkAddUpdate = {
+          idBook: this.comment.idBook, oldMark: this.oldRating, newMark: this.rating
+        };
+        this.bookService.configureMark(mark);
       }else{
         this.commentMessage="Morate oceniti."
       }

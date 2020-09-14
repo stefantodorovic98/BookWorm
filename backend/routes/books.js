@@ -28,6 +28,9 @@ router.post("/addBookImage", multer({ storage: storage }).single("image"), (req,
         issueDate: req.body.issueDate,
         genres: req.body.genres,
         description: req.body.description,
+        averageMark: 0,
+        sumMark: 0,
+        numMark: 0,
         allowed: req.body.allowed
     });
     book.save()
@@ -55,6 +58,9 @@ router.post("/addBookNoImage", (req, res, next) => {
         issueDate: dateString,
         genres: req.body.genres,
         description: req.body.description,
+        averageMark: 0,
+        sumMark: 0,
+        numMark: 0,
         allowed: req.body.allowed
     });
     book.save()
@@ -374,6 +380,9 @@ router.post("/addBookData", (req, res, next) => {
                 const userBook = new UserBooks({
                     idUser: req.body.idUser,
                     idBook: req.body.idBook,
+                    title: req.body.title,
+                    authors: req.body.authors,
+                    genres: req.body.genres,
                     read: req.body.read,
                     wait: req.body.wait,
                     currRead: req.body.currRead,
@@ -394,6 +403,9 @@ router.post("/addBookData", (req, res, next) => {
                     });;
             } else {
                 UserBooks.updateOne({ idUser: req.body.idUser, idBook: req.body.idBook }, {
+                        title: req.body.title,
+                        authors: req.body.authors,
+                        genres: req.body.genres,
                         read: req.body.read,
                         wait: req.body.wait,
                         currRead: req.body.currRead,
@@ -469,12 +481,13 @@ router.post("/addComment", (req, res, next) => {
         idUser: req.body.idUser,
         username: req.body.username,
         idBook: req.body.idBook,
+        title: req.body.title,
+        authors: req.body.authors,
         rating: req.body.rating,
         comment: req.body.comment
     });
     comment.save()
         .then(newComment => {
-            console.log(newComment);
             res.status(201).json({
                 message: "Ok"
             });
@@ -483,6 +496,37 @@ router.post("/addComment", (req, res, next) => {
             res.status(500).json({
                 message: "Komentar vec postoji"
             })
+        });
+});
+
+router.post("/addMark", (req, res, next) => {
+    Books.findById(req.body.idBook)
+        .then(book => {
+            let newMark = new Number(req.body.newMark);
+            let sumMark = book.sumMark + newMark;
+            let numMark = book.numMark + 1;
+            let averageMark = sumMark / numMark;
+            Books.updateOne({ _id: req.body.idBook }, {
+                    averageMark: averageMark,
+                    sumMark: sumMark,
+                    numMark: numMark
+                })
+                .then(result => {
+                    if (result.nModified > 0) {
+                        res.status(200).json({
+                            message: "Ok"
+                        });
+                    } else {
+                        res.status(500).json({
+                            message: "Nijedno polje nije promenjeno"
+                        })
+                    }
+                })
+                .catch(error => {
+                    res.status(500).json({
+                        message: "Problem s azuriranjem"
+                    })
+                });
         });
 });
 
@@ -535,6 +579,39 @@ router.post("/configureComment", (req, res, next) => {
                 message: "Problem s azuriranjem"
             })
         });;
+});
+
+router.post("/configureMark", (req, res, next) => {
+    Books.findById(req.body.idBook)
+        .then(book => {
+            let newMark = new Number(req.body.newMark);
+            let oldMark = new Number(req.body.oldMark);
+            let sumMark = book.sumMark - oldMark + newMark;
+            console.log(sumMark)
+            let numMark = book.numMark;
+            let averageMark = sumMark / numMark;
+            Books.updateOne({ _id: req.body.idBook }, {
+                    averageMark: averageMark,
+                    sumMark: sumMark,
+                    numMark: numMark
+                })
+                .then(result => {
+                    if (result.nModified > 0) {
+                        res.status(200).json({
+                            message: "Ok"
+                        });
+                    } else {
+                        res.status(500).json({
+                            message: "Nijedno polje nije promenjeno"
+                        })
+                    }
+                })
+                .catch(error => {
+                    res.status(500).json({
+                        message: "Problem s azuriranjem"
+                    })
+                });
+        });
 });
 
 
