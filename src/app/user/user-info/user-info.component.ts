@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { User } from '../models/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,8 @@ import { BookService } from 'src/app/books/book.service';
 import { UserBook } from 'src/app/books/models/userBook.model';
 import { PageEvent } from '@angular/material/paginator';
 import { Genre } from 'src/app/books/models/genre';
+import { Comment } from '../../books/models/comment.model';
+import { ApexChart, ApexNonAxisChartSeries, ApexResponsive, ChartComponent } from 'ng-apexcharts';
 
 @Component({
   selector: 'app-user-info',
@@ -34,13 +36,24 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   private getAllBooksUserCurrReadSub: Subscription;
   private getAllBooksUserWaitSub: Subscription;
   private getAllBooksUserReadNoPaginatorSub: Subscription;
+  private getAllCommentsUserWroteSub: Subscription;
   userReadBooks: UserBook[] = [];
   userCurrReadBooks: UserBook[] = [];
   userWaitBooks: UserBook[] = [];
   userReadBooksNoPaginator: UserBook[] = [];
 
+  displayedColumnsForUserComments: string[] = ['title', 'authors', 'rating', 'comment'];
+  userComments: Comment[] = [];
+
   private getGenresSub: Subscription;
   genres: Genre[] = [];
+
+  pieSeries: ApexNonAxisChartSeries;
+  pieChart: ApexChart;
+  pieResponsive: ApexResponsive[];
+  pieLabels: any;
+
+  pieCondition: boolean = false;
 
   constructor(private userService: UserService, private bookService: BookService, private route: ActivatedRoute, private router: Router) { }
 
@@ -74,16 +87,54 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.bookService.getAllBooksUserWait(this.id, this.waitBooksPerPage, this.currentPageForWaitBooks);
 
     this.getAllBooksUserReadNoPaginatorSub = this.bookService.getGetAllBooksUserReadNoPaginatorListener()
-      .subscribe(data => {
-        this.userReadBooksNoPaginator = data;
-      });
+      .subscribe(data1 => {
+          this.userReadBooksNoPaginator = data1;
+          this.getGenresSub = this.bookService.getGetGenresListener()
+          .subscribe(data2 => {
+              this.genres = data2;
+              let lab: string[] = [];
+              let ser: number[] = [];
+              if(this.genres && this.userReadBooksNoPaginator){
+                for(let i=0;i<this.genres.length;i++){
+                  let val = 0;
+                  for(let j=0;j<this.userReadBooksNoPaginator.length;j++){
+                    if(this.userReadBooksNoPaginator[j].genres.includes(this.genres[i].name)) val++;
+                  }
+                  lab.push(this.genres[i].name);
+                  ser.push(val);
+                }
+                this.pieSeries = ser;
+                this.pieLabels = lab;
+
+                this.pieChart= {
+                  width: 380,
+                  type: "pie"
+                };
+                this.pieResponsive= [
+                  {
+                    breakpoint: 480,
+                    options: {
+                      chart: {
+                        width: 200
+                      },
+                      legend: {
+                        position: "bottom"
+                      }
+                    }
+                  }
+                ];
+              }
+              this.pieCondition = true;
+          });
+      this.bookService.getGenres();
+    });
     this.bookService.getAllBooksUserReadNoPaginator(this.id);
 
-    this.getGenresSub = this.bookService.getGetGenresListener()
+    this.getAllCommentsUserWroteSub = this.bookService.getGetAllCommentsUserWroteListener()
       .subscribe(data => {
-        this.genres = data;
+        this.userComments = data;
       });
-    this.bookService.getGenres();
+    this.bookService.getAllCommentsUserWrote(this.id);
   }
 
   ngOnDestroy(): void {
@@ -96,8 +147,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   }
 
   configureUser(){
-    console.log(this.genres)
-    console.log(this.userReadBooksNoPaginator)
+    console.log(this.userComments.length)
     //this.router.navigate(['/userConfigure', this.id]);
   }
 
@@ -126,4 +176,6 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.waitBooksPerPage = pageData.pageSize;
     this.bookService.getAllBooksUserWait(this.id, this.waitBooksPerPage, this.currentPageForWaitBooks);
   }
+
+
 }

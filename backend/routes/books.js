@@ -691,4 +691,14 @@ router.get("/getAllBooksUserReadNoPaginator/:id", (req, res, next) => {
         });
 });
 
+router.get("/getAllCommentsUserWrote/:id", (req, res, next) => {
+    Comment.find({ idUser: req.params.id })
+        .then(comments => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: comments
+            });
+        });
+});
+
 module.exports = router;

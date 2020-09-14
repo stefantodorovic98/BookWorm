@@ -59,3 +59,10 @@ table {
 a {
     text-decoration: none;
 }
+
+.chart {
+    background-color: white;
+    max-width: 380px;
+    margin: 35px auto;
+    padding: 0;
+}

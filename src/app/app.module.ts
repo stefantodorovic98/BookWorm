@@ -22,6 +22,8 @@ import { MatTableModule } from "@angular/material/table";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatPaginatorModule } from "@angular/material/paginator";
 
+import { NgApexchartsModule } from "ng-apexcharts";
+
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
@@ -84,6 +86,7 @@ import { CommentConfigureComponent } from './books/comment-configure/comment-con
     MatTableModule,
     MatProgressBarModule,
     MatPaginatorModule,
+    NgApexchartsModule,
     NgxCaptchaModule,
     HttpClientModule
   ],

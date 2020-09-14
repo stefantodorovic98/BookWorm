@@ -103,6 +103,9 @@
         <mat-row *matRowDef="let row; columns: displayedColumnsForUserReadBooks;"></mat-row>
     </mat-table>
     <mat-paginator [length]="totalReadBooks" [pageSize]="readBooksPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPageForReadBooks($event)"></mat-paginator>
+    <div class="chart" *ngIf="pieCondition">
+        <apx-chart [series]="pieSeries" [chart]="pieChart" [labels]="pieLabels" [responsive]="pieResponsive"></apx-chart>
+    </div>
 </mat-card>
 
 <mat-card>
@@ -174,4 +177,40 @@
         <mat-row *matRowDef="let row; columns: displayedColumnsForUserWaitBooks;"></mat-row>
     </mat-table>
     <mat-paginator [length]="totalWaitBooks" [pageSize]="waitBooksPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPageForWaitBooks($event)"></mat-paginator>
+</mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">
+        Komentari korisnika
+    </mat-card-title>
+    <mat-table [dataSource]="userComments" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button [routerLink]="['/bookInfo',element.idBook]">
+                {{element.title}}
+              </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="authors">
+            <mat-header-cell *matHeaderCellDef> Autori </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.authors}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="rating">
+            <mat-header-cell *matHeaderCellDef> Ocena korisnika </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.rating}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="comment">
+            <mat-header-cell *matHeaderCellDef> Komentar </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.comment}} </mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForUserComments"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForUserComments;"></mat-row>
+    </mat-table>
 </mat-card>
