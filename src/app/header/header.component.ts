@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { LoggedUser } from '../user/models/loggedUser.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   loggedUser: LoggedUser = null;
   privilege: string = "";
 
-  constructor(private service: UserService) { }
+  constructor(private service: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.loggedUser = this.service.whoIsLogged();

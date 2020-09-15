@@ -35,6 +35,7 @@ export class BookService {
   private getAllBooksUserReadNoPaginatorListener = new Subject<UserBook[]>();
 
   private getAllCommentsUserWroteListener = new Subject<Comment[]>();
+  private getAllCommentsForBookListener = new Subject<Comment[]>();
 
   getBookListListener(){
     return this.bookListListener.asObservable();
@@ -98,6 +99,10 @@ export class BookService {
 
   getGetAllCommentsUserWroteListener(){
     return this.getAllCommentsUserWroteListener.asObservable();
+  }
+
+  getGetAllCommentsForBookListener(){
+    return this.getAllCommentsForBookListener.asObservable();
   }
 
   getBooks(){
@@ -448,6 +453,13 @@ export class BookService {
     this.http.get<{message:string, data: Comment[]}>('http://localhost:3000/api/books/getAllCommentsUserWrote/' + id)
     .subscribe((responseData) => {
       this.getAllCommentsUserWroteListener.next([...responseData.data])
+    });
+  }
+
+  getAllCommentsForBook(id: number){
+    this.http.get<{message:string, data: Comment[]}>('http://localhost:3000/api/books/getAllCommentsForBook/' + id)
+    .subscribe((responseData) => {
+      this.getAllCommentsForBookListener.next([...responseData.data])
     });
   }
 

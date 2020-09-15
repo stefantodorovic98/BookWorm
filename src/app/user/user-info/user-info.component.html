@@ -7,8 +7,11 @@
                 </mat-card-header>
             </td>
             <td>
-                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="configureUser()">
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="configureUser()" *ngIf="configureCondition">
                   <mat-icon>build</mat-icon>
+                </button>
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="configureUser()" *ngIf="!configureCondition">
+                  Prati <mat-icon>group_add</mat-icon>
                 </button>
             </td>
         </tr>

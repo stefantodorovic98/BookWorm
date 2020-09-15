@@ -23,7 +23,8 @@ export class BookInfoComponent implements OnInit, OnDestroy {
   private userBookSub: Subscription = null;
   private userBookReqSub: Subscription;
   private userCommentSub: Subscription = null;
-  loggedUser: LoggedUser;
+
+  loggedUser: LoggedUser = null;
   privilege: string = "";
   id:number;
   message: string = " ";
@@ -45,6 +46,10 @@ export class BookInfoComponent implements OnInit, OnDestroy {
 
   comment: Comment = null;
   commentMessage: string = " ";
+
+  displayedColumnsForUserComments: string[] = ['author', 'rating', 'comment'];
+  private getAllCommentsForBookSub: Subscription;
+  comments: Comment[] = [];
 
   constructor(private bookService: BookService, private userService: UserService ,private route: ActivatedRoute, private router: Router) { }
 
@@ -100,6 +105,12 @@ export class BookInfoComponent implements OnInit, OnDestroy {
     this.commentForm = new FormGroup({
       comment: new FormControl("")
     });
+
+    this.getAllCommentsForBookSub = this.bookService.getGetAllCommentsForBookListener()
+      .subscribe(data => {
+        this.comments = data;
+      });
+    this.bookService.getAllCommentsForBook(this.id);
   }
 
   ngOnDestroy(): void {
@@ -111,6 +122,7 @@ export class BookInfoComponent implements OnInit, OnDestroy {
     if(this.userCommentSub){
       this.userCommentSub.unsubscribe();
     }
+    this.getAllCommentsForBookSub.unsubscribe();
   }
 
   niceOutput(book:Book):Book{

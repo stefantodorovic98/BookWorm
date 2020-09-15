@@ -9,6 +9,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Genre } from 'src/app/books/models/genre';
 import { Comment } from '../../books/models/comment.model';
 import { ApexChart, ApexNonAxisChartSeries, ApexResponsive, ChartComponent } from 'ng-apexcharts';
+import { LoggedUser } from '../models/loggedUser.model';
 
 @Component({
   selector: 'app-user-info',
@@ -55,15 +56,24 @@ export class UserInfoComponent implements OnInit, OnDestroy {
 
   pieCondition: boolean = false;
 
+  loggedUser: LoggedUser;
+  configureCondition: boolean = false;
+
   constructor(private userService: UserService, private bookService: BookService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params.id;
-    this.userSub = this.userService.getUserListener()
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.userSub = this.userService.getUserListener()
       .subscribe((data) => {
         this.user = data;
       });
     this.userService.getUser(this.id);
+
+    this.loggedUser = this.userService.whoIsLogged();
+    if(this.loggedUser){
+      if(this.id === this.loggedUser._id) this.configureCondition = true;
+    }
 
     this.getAllBooksUserReadSub = this.bookService.getGetAllBooksUserReadListener()
       .subscribe(data => {
@@ -135,6 +145,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
         this.userComments = data;
       });
     this.bookService.getAllCommentsUserWrote(this.id);
+    })
   }
 
   ngOnDestroy(): void {

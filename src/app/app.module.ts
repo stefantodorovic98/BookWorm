@@ -21,6 +21,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTableModule } from "@angular/material/table";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatExpansionModule } from "@angular/material/expansion";
 
 import { NgApexchartsModule } from "ng-apexcharts";
 
@@ -44,6 +45,7 @@ import { BookConfigureComponent } from './books/book-configure/book-configure.co
 import { ModeratorComponent } from './user/moderator/moderator.component';
 import { StarRatingComponent } from './books/star-rating/star-rating.component';
 import { CommentConfigureComponent } from './books/comment-configure/comment-configure.component';
+import { UserListComponent } from './user/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,8 @@ import { CommentConfigureComponent } from './books/comment-configure/comment-con
     BookConfigureComponent,
     ModeratorComponent,
     StarRatingComponent,
-    CommentConfigureComponent
+    CommentConfigureComponent,
+    UserListComponent
   ],
   imports: [
     BrowserModule,
@@ -86,6 +89,7 @@ import { CommentConfigureComponent } from './books/comment-configure/comment-con
     MatTableModule,
     MatProgressBarModule,
     MatPaginatorModule,
+    MatExpansionModule,
     NgApexchartsModule,
     NgxCaptchaModule,
     HttpClientModule
