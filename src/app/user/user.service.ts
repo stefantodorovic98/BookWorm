@@ -2,11 +2,15 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { User } from './models/user.model';
 import { Auth } from './models/auth.model';
+import { Find } from './models/find.model';
+import { Follow } from './models/follow.model';
+import { Notification } from './models/notification.model';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LoggedUser } from './models/loggedUser.model';
 import { ConfiguredUser } from './models/configuredUser.model';
 import { ChangedPassword } from './models/changedPassword.model';
+import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +29,14 @@ export class UserService {
   private isUserLoggedListener = new Subject<LoggedUser>();
   private userRegisterRequestsListener = new Subject<User[]>();
   private registredUsersListener = new Subject<User[]>();
+
+  private allUsersListener = new Subject<User[]>();
+
+  private doIFollowListener = new Subject<Follow>();
+
+  private usersMeFollowListener = new Subject<Follow[]>();
+
+  private notificationsListener = new Subject<Notification[]>();
 
   getUserRegisterListener(){
     return this.userRegisterListener.asObservable();
@@ -64,6 +76,22 @@ export class UserService {
 
   getRegistredUsersListener(){
     return this.registredUsersListener.asObservable();
+  }
+
+  getAllUsersListener(){
+    return this.allUsersListener.asObservable();
+  }
+
+  getDoIFollowListener(){
+    return this.doIFollowListener.asObservable();
+  }
+
+  getUsersMeFollowListener(){
+    return this.usersMeFollowListener.asObservable();
+  }
+
+  getNotificationsListener(){
+    return this.notificationsListener.asObservable();
   }
 
   registerUser(firstname:string, lastname:string, username:string, password:string,
@@ -249,6 +277,114 @@ export class UserService {
   downgradeToUser(id:number){
     this.http.get<{message:string}>('http://localhost:3000/api/user/downgradeToUser/'+id)
       .subscribe(responseData => {
+        console.log(responseData.message);
+        window.location.reload();
+      });
+  }
+
+  getUsers(id:number){
+    this.http.get<{message:string, data: User[]}>('http://localhost:3000/api/user/getUsers/'+id)
+      .subscribe((responseData) => {
+        this.allUsersListener.next([...responseData.data]);
+      });
+  }
+
+  find(id: number, firstname: string, lastname: string, username: string, email: string){
+    const data: Find = {
+      id: id, firstname: firstname, lastname: lastname, username: username, email: email
+    };
+    this.http.post<{message:string, data: User[]}>('http://localhost:3000/api/user/findUsers',data)
+    .subscribe((responseData) => {
+      this.allUsersListener.next([...responseData.data]);
+    });
+  }
+
+  followUser(idUser: number, whomFollows: number){
+    const data: Follow = {
+      _id:null, idUser: idUser, whomFollows: whomFollows
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/user/followUser', data)
+    .subscribe((responseData) => {
+      console.log(responseData.message)
+      window.location.reload();
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  unfollowUser(idUser: number, whomFollows: number){
+    const data: Follow = {
+      _id:null, idUser: idUser, whomFollows: whomFollows
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/user/unfollowUser', data)
+    .subscribe((responseData) => {
+      console.log(responseData.message)
+      window.location.reload();
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  doIFollow(idUser: number, whomFollows: number){
+    const data: Follow = {
+      _id:null, idUser: idUser, whomFollows: whomFollows
+    };
+    this.http.post<{message:string, data: Follow}>('http://localhost:3000/api/user/doIFollow', data)
+    .subscribe((responseData) => {
+      if(responseData.data){
+        this.doIFollowListener.next({...responseData.data});
+      }else{
+        this.doIFollowListener.next(null);
+      }
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  getAllUsersIFollow(id: number){
+    this.http.get<{message:string, data: Follow[]}>('http://localhost:3000/api/user/getAllUsersIFollow/'+id)
+      .subscribe((responseData) => {
+        console.log(responseData);
+      });
+  }
+
+  getAllUsersMeFollow(id: number){
+    this.http.get<{message:string, data: Follow[]}>('http://localhost:3000/api/user/getAllUsersMeFollow/'+id)
+      .subscribe((responseData) => {
+        this.usersMeFollowListener.next([...responseData.data]);
+      });
+  }
+
+  notifyFollower(idUser: number, idBook: number, username: string, title: string){
+    let text: string = "Korisnik " + username + " je komentarisao knjigu " + title;
+    const data: Notification = {
+      _id:null, idUser: idUser, idBook: idBook, text: text, read: "0"
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/user/notifyFollower', data)
+    .subscribe((responseData) => {
+      console.log("Obavesten");
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  getNotReadNotifications(id: number) {
+    this.http.get<{message:string, data: Notification[]}>('http://localhost:3000/api/user/getNotReadNotifications/'+id)
+      .subscribe((responseData) => {
+        this.notificationsListener.next([...responseData.data]);
+      });
+  }
+
+  getAllNotifications(id: number) {
+    this.http.get<{message:string, data: Notification[]}>('http://localhost:3000/api/user/getAllNotifications/'+id)
+      .subscribe((responseData) => {
+        this.notificationsListener.next([...responseData.data]);
+      });
+  }
+
+  markReadNotification(id: number) {
+    this.http.get<{message:StringMap}>('http://localhost:3000/api/user/markReadNotification/'+id)
+      .subscribe((responseData) => {
         console.log(responseData.message);
         window.location.reload();
       });

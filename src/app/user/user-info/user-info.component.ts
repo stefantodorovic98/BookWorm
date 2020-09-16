@@ -10,6 +10,7 @@ import { Genre } from 'src/app/books/models/genre';
 import { Comment } from '../../books/models/comment.model';
 import { ApexChart, ApexNonAxisChartSeries, ApexResponsive, ChartComponent } from 'ng-apexcharts';
 import { LoggedUser } from '../models/loggedUser.model';
+import { Follow } from '../models/follow.model';
 
 @Component({
   selector: 'app-user-info',
@@ -38,6 +39,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   private getAllBooksUserWaitSub: Subscription;
   private getAllBooksUserReadNoPaginatorSub: Subscription;
   private getAllCommentsUserWroteSub: Subscription;
+
   userReadBooks: UserBook[] = [];
   userCurrReadBooks: UserBook[] = [];
   userWaitBooks: UserBook[] = [];
@@ -59,6 +61,9 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   loggedUser: LoggedUser;
   configureCondition: boolean = false;
 
+  private doIFollowSub: Subscription = null;
+  followData: Follow = null;
+
   constructor(private userService: UserService, private bookService: BookService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -73,8 +78,14 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.loggedUser = this.userService.whoIsLogged();
     if(this.loggedUser){
       if(this.id === this.loggedUser._id) this.configureCondition = true;
+      else{
+        this.doIFollowSub = this.userService.getDoIFollowListener()
+          .subscribe(data => {
+            this.followData = data;
+          });
+        this.userService.doIFollow(this.loggedUser._id, this.id);
+      }
     }
-
     this.getAllBooksUserReadSub = this.bookService.getGetAllBooksUserReadListener()
       .subscribe(data => {
         this.userReadBooks = data.books;
@@ -155,6 +166,8 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.getAllBooksUserWaitSub.unsubscribe();
     this.getAllBooksUserReadNoPaginatorSub.unsubscribe();
     this.getGenresSub.unsubscribe();
+    this.getAllCommentsUserWroteSub.unsubscribe();
+    if(this.doIFollowSub) this.doIFollowSub.unsubscribe();
   }
 
   configureUser(){
@@ -186,6 +199,14 @@ export class UserInfoComponent implements OnInit, OnDestroy {
     this.currentPageForWaitBooks = pageData.pageIndex + 1;
     this.waitBooksPerPage = pageData.pageSize;
     this.bookService.getAllBooksUserWait(this.id, this.waitBooksPerPage, this.currentPageForWaitBooks);
+  }
+
+  follow(){
+    this.userService.followUser(this.loggedUser._id, this.id);
+  }
+
+  unfollow(){
+    this.userService.unfollowUser(this.loggedUser._id, this.id);
   }
 
 

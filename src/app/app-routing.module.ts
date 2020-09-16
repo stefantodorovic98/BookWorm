@@ -16,6 +16,8 @@ import { AdminComponent } from './user/admin/admin.component';
 import { BookConfigureComponent } from './books/book-configure/book-configure.component';
 import { ModeratorComponent } from './user/moderator/moderator.component';
 import { CommentConfigureComponent } from './books/comment-configure/comment-configure.component';
+import { UserListComponent } from './user/user-list/user-list.component';
+import { NotificationComponent } from './user/notification/notification.component';
 
 const routes: Routes = [
   {path:"", component:LoginComponent},
@@ -33,7 +35,9 @@ const routes: Routes = [
   {path:"admin/:id", component: AdminComponent},
   {path:"bookConfigure/:id", component: BookConfigureComponent},
   {path:"moderator/:id", component: ModeratorComponent},
-  {path:"commentConfigure/:id", component: CommentConfigureComponent}
+  {path:"commentConfigure/:id", component: CommentConfigureComponent},
+  {path:"userList", component: UserListComponent},
+  {path:"notifications/:id", component: NotificationComponent}
 ];
 
 @NgModule({

@@ -1,0 +1,47 @@
+<mat-card>
+    <mat-card-title color="primary">
+        Da li zelite procitana obavestenja?
+    </mat-card-title>
+    <form (submit)="findAll()" [formGroup]="notificationForm">
+        <mat-checkbox formControlName="read" (change)="change($event)">
+            Da
+        </mat-checkbox><br>
+        <button class="button" mat-raised-button color="primary" type="submit">Trazi</button>
+    </form>
+</mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">
+        Obavestenja
+    </mat-card-title>
+    <mat-table [dataSource]="notifications" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="text">
+            <mat-header-cell *matHeaderCellDef> Sadrzaj </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.text}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="link">
+            <mat-header-cell *matHeaderCellDef> Link do obavestenja </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-icon-button [routerLink]="['/bookInfo',element.idBook]" [disabled]="element.allowed==='0'">
+                  <mat-icon>info</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="read">
+            <mat-header-cell *matHeaderCellDef> Oznaci da je procitano </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <a mat-button (click)="markRead(element._id)">
+                    <mat-icon *ngIf="element.read==='0'">image_search</mat-icon>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+</mat-card>

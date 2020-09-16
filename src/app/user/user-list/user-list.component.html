@@ -1,1 +1,68 @@
-<p>user-list works!</p>
+<mat-card>
+    <mat-card-title color="primary">
+        Trazi korisnika
+    </mat-card-title>
+    <form (submit)="find()" [formGroup]="findForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Ime</mat-label>
+            <input matInput type="text" formControlName="firstname">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Prezime</mat-label>
+            <input matInput type="text" formControlName="lastname">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Korisnicko ime</mat-label>
+            <input matInput type="text" formControlName="username">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Adresa elektronske poste</mat-label>
+            <input matInput type="text" formControlName="email">
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Trazi</button>
+    </form>
+</mat-card>
+
+<mat-table [dataSource]="users" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="path">
+        <mat-header-cell *matHeaderCellDef> Slika</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <div class="image"><img [src]="element.imagePath" /> </div>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="firstname">
+        <mat-header-cell *matHeaderCellDef> Ime </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="lastname">
+        <mat-header-cell *matHeaderCellDef> Prezime </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="username">
+        <mat-header-cell *matHeaderCellDef> Korisnicko ime </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.username}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef> Adresa elektronske poste </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="userInfo">
+        <mat-header-cell *matHeaderCellDef> Link </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+            <button mat-icon-button [routerLink]="['/userInfo',element._id]">
+              <mat-icon>info</mat-icon>
+          </button>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+</mat-table>

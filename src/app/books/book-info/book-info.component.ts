@@ -9,6 +9,7 @@ import { UserBook } from '../models/userBook.model';
 import { Comment } from '../models/comment.model';
 import { MarkAddUpdate } from '../models/markAddUpdate.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Follow } from 'src/app/user/models/follow.model';
 
 @Component({
   selector: 'app-book-info',
@@ -50,6 +51,9 @@ export class BookInfoComponent implements OnInit, OnDestroy {
   displayedColumnsForUserComments: string[] = ['author', 'rating', 'comment'];
   private getAllCommentsForBookSub: Subscription;
   comments: Comment[] = [];
+
+  private usersMeFollowSub: Subscription;
+  usersMeFollow: Follow[] = [];
 
   constructor(private bookService: BookService, private userService: UserService ,private route: ActivatedRoute, private router: Router) { }
 
@@ -111,6 +115,12 @@ export class BookInfoComponent implements OnInit, OnDestroy {
         this.comments = data;
       });
     this.bookService.getAllCommentsForBook(this.id);
+
+    this.usersMeFollowSub = this.userService.getUsersMeFollowListener()
+      .subscribe(data => {
+        this.usersMeFollow = data;
+      });
+    this.userService.getAllUsersMeFollow(this.loggedUser._id)
   }
 
   ngOnDestroy(): void {
@@ -123,6 +133,7 @@ export class BookInfoComponent implements OnInit, OnDestroy {
       this.userCommentSub.unsubscribe();
     }
     this.getAllCommentsForBookSub.unsubscribe();
+    this.usersMeFollowSub.unsubscribe();
   }
 
   niceOutput(book:Book):Book{
@@ -211,6 +222,11 @@ export class BookInfoComponent implements OnInit, OnDestroy {
       if(this.rating!=0) {
         this.bookService.addComment(this.loggedUser._id, this.loggedUser.username, this.id, this.book.title, this.book.authors,
        this.rating, this.commentForm.value.comment);
+       if(this.usersMeFollow.length>0){
+         for(let i=0;i<this.usersMeFollow.length;i++){
+           this.userService.notifyFollower(this.usersMeFollow[i].idUser, this.book._id, this.loggedUser.username, this.book.title);
+         }
+       }
         let mark: MarkAddUpdate = {
           idBook: this.id, oldMark: 0, newMark: this.rating
         };

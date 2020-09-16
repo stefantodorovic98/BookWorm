@@ -1,0 +1,30 @@
+mat-table {
+    width: 60%;
+    margin: 20px auto;
+}
+
+.image {
+    height: 5rem;
+    margin: 1rem 0;
+}
+
+.image img {
+    height: 100%;
+}
+
+.mat-column-email {
+    flex: 0 0 30%;
+}
+
+mat-card {
+    width: 60%;
+    margin: 20px auto;
+}
+
+mat-card-title {
+    text-align: center;
+}
+
+mat-form-field {
+    width: 100%;
+}

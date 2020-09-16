@@ -1,0 +1,35 @@
+mat-table {
+    width: 100%;
+    margin: 20px auto;
+}
+
+mat-card {
+    width: 60%;
+    margin: 20px auto;
+}
+
+mat-card-title {
+    text-align: center;
+}
+
+.mat-column-text {
+    flex: 0 0 60%;
+}
+
+
+/*  */
+
+mat-checkbox {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.button {
+    display: inline-block;
+    text-align: center;
+}
+
+mat-form-field {
+    width: 100%;
+}

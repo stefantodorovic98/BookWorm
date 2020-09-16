@@ -5,6 +5,9 @@
         <li>
             <a mat-button routerLink="/bookList" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Knjige</a>
         </li>
+        <li *ngIf="loggedUser">
+            <a mat-button routerLink="/userList" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Korisnici</a>
+        </li>
         <li *ngIf="!loggedUser">
             <a mat-button routerLink="" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Prijava</a>
         </li>
@@ -19,6 +22,9 @@
         </li>
         <li *ngIf="loggedUser">
             <a mat-button [routerLink]="['/userInfo',loggedUser._id]" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Profil</a>
+        </li>
+        <li *ngIf="loggedUser">
+            <a mat-button [routerLink]="['/notifications',loggedUser._id]" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Obavestenja</a>
         </li>
         <li *ngIf="loggedUser">
             <a mat-button routerLink="/logout" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Odjavi se</a>

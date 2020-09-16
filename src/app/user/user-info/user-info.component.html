@@ -10,8 +10,11 @@
                 <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="configureUser()" *ngIf="configureCondition">
                   <mat-icon>build</mat-icon>
                 </button>
-                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="configureUser()" *ngIf="!configureCondition">
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="follow()" *ngIf="!configureCondition && !followData">
                   Prati <mat-icon>group_add</mat-icon>
+                </button>
+                <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="unfollow()" *ngIf="!configureCondition && followData">
+                  Prestani da pratis <mat-icon>backspace</mat-icon>
                 </button>
             </td>
         </tr>

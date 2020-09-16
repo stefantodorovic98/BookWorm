@@ -5,6 +5,8 @@ const fs = require("fs");
 const nodemailer = require('nodemailer');
 
 const User = require('../models/user');
+const Follow = require('../models/follow');
+const Notification = require('../models/notification');
 
 const router = express.Router();
 
@@ -494,6 +496,198 @@ router.get("/downgradeToUser/:id", (req, res, next) => {
             })
         });
 });
+
+router.get("/getUsers/:id", (req, res, next) => {
+    User.find({ _id: { $ne: req.params.id }, allowed: "1" })
+        .then(user => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: user
+            });
+        });
+});
+
+router.post("/findUsers", (req, res, next) => {
+    User.find({ _id: { $ne: req.body.id }, allowed: "1" })
+        .then(users => {
+            let firstname = req.body.firstname;
+            let lastname = req.body.lastname;
+            let username = req.body.username;
+            let email = req.body.email;
+            if (firstname != null && firstname != "") {
+                users = users.filter(function(elem) {
+                    let e = "" + elem.firstname;
+                    let t = "" + firstname;
+                    if (e.toLowerCase().indexOf(t.toLowerCase()) !== -1) return true;
+                    else return false;
+                });
+            }
+            if (lastname != null && lastname != "") {
+                users = users.filter(function(elem) {
+                    let e = "" + elem.lastname;
+                    let t = "" + lastname;
+                    if (e.toLowerCase().indexOf(t.toLowerCase()) !== -1) return true;
+                    else return false;
+                });
+            }
+            if (username != null && username != "") {
+                users = users.filter(function(elem) {
+                    let e = "" + elem.username;
+                    let t = "" + username;
+                    if (e.toLowerCase().indexOf(t.toLowerCase()) !== -1) return true;
+                    else return false;
+                });
+            }
+            if (email != null && email != "") {
+                users = users.filter(function(elem) {
+                    let e = "" + elem.email;
+                    let t = "" + email;
+                    if (e.toLowerCase().indexOf(t.toLowerCase()) !== -1) return true;
+                    else return false;
+                });
+            }
+
+            res.status(200).json({
+                message: "Sve je ok",
+                data: users
+            });
+        });
+});
+
+router.post("/followUser", (req, res, next) => {
+    const follow = new Follow({
+        idUser: req.body.idUser,
+        whomFollows: req.body.whomFollows
+    });
+    follow.save()
+        .then(newFollow => {
+            res.status(201).json({
+                message: "Ok"
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Vec postoji"
+            })
+        });
+});
+
+router.post("/doIFollow", (req, res, next) => {
+    Follow.findOne({ idUser: req.body.idUser, whomFollows: req.body.whomFollows })
+        .then(user => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: user
+            });
+        });
+});
+
+router.get("/getAllUsersIFollow/:id", (req, res, next) => {
+    Follow.find({ idUser: req.params.id })
+        .then(user => {
+            console.log(user);
+            res.status(200).json({
+                message: "Sve je ok",
+                data: user
+            });
+        });
+});
+
+router.get("/getAllUsersMeFollow/:id", (req, res, next) => {
+    Follow.find({ whomFollows: req.params.id })
+        .then(user => {
+            console.log(user);
+            res.status(200).json({
+                message: "Sve je ok",
+                data: user
+            });
+        });
+});
+
+router.post("/unfollowUser", (req, res, next) => {
+    Follow.deleteOne({ idUser: req.body.idUser, whomFollows: req.body.whomFollows })
+        .then(result => {
+            if (result.deletedCount > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.post("/notifyFollower", (req, res, next) => {
+    const data = new Notification({
+        idUser: req.body.idUser,
+        idBook: req.body.idBook,
+        text: req.body.text,
+        read: req.body.read
+    });
+    data.save()
+        .then(newNotification => {
+            res.status(201).json({
+                message: "Ok"
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Vec postoji"
+            })
+        });
+});
+
+router.get("/getNotReadNotifications/:id", (req, res, next) => {
+    Notification.find({ idUser: req.params.id, read: "0" })
+        .then(notif => {
+            console.log(notif);
+            res.status(200).json({
+                message: "Sve je ok",
+                data: notif
+            });
+        });
+});
+
+router.get("/getAllNotifications/:id", (req, res, next) => {
+    Notification.find({ idUser: req.params.id })
+        .then(notif => {
+            console.log(notif);
+            res.status(200).json({
+                message: "Sve je ok",
+                data: notif
+            });
+        });
+});
+
+router.get("/markReadNotification/:id", (req, res, next) => {
+    Notification.updateOne({ _id: req.params.id }, {
+            read: "1"
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
 
 
 module.exports = router;

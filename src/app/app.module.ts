@@ -22,6 +22,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatExpansionModule } from "@angular/material/expansion";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 import { NgApexchartsModule } from "ng-apexcharts";
 
@@ -46,6 +47,7 @@ import { ModeratorComponent } from './user/moderator/moderator.component';
 import { StarRatingComponent } from './books/star-rating/star-rating.component';
 import { CommentConfigureComponent } from './books/comment-configure/comment-configure.component';
 import { UserListComponent } from './user/user-list/user-list.component';
+import { NotificationComponent } from './user/notification/notification.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +70,8 @@ import { UserListComponent } from './user/user-list/user-list.component';
     ModeratorComponent,
     StarRatingComponent,
     CommentConfigureComponent,
-    UserListComponent
+    UserListComponent,
+    NotificationComponent
   ],
   imports: [
     BrowserModule,
@@ -90,6 +93,7 @@ import { UserListComponent } from './user/user-list/user-list.component';
     MatProgressBarModule,
     MatPaginatorModule,
     MatExpansionModule,
+    MatCheckboxModule,
     NgApexchartsModule,
     NgxCaptchaModule,
     HttpClientModule

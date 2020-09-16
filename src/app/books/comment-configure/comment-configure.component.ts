@@ -68,7 +68,6 @@ export class CommentConfigureComponent implements OnInit, OnDestroy {
   }
 
   onCommentConfigure(){
-    alert(this.oldRating + " " + this.rating)
     this.commentMessage=" ";
     let arr: string[] = this.commentConfigureForm.value.comment.split(/\s+/g);
     if(arr.length<=1000){
