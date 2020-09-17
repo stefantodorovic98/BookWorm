@@ -23,7 +23,7 @@
         <button mat-raised-button color="primary" type="submit">Trazi</button>
     </form>
 </mat-card>
-<mat-table [dataSource]="books" class="mat-elevation-z8">
+<mat-table [dataSource]="books" class="mat-elevation-z8" *ngIf="books.length>0">
     <!-- Position Column -->
     <ng-container matColumnDef="title">
         <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
@@ -62,4 +62,10 @@
 
 </mat-table>
 
-<app-book-add *ngIf="(books.length==0 || (logUser && logUser.privilege==='A')) && isLogged"></app-book-add>
+<mat-card *ngIf="books.length===0">
+    <mat-card-title>
+        <p style="color:red">Nema knjige po tim kriterijumima</p>
+    </mat-card-title>
+</mat-card>
+
+<app-book-add *ngIf="books.length===0 && isLogged"></app-book-add>

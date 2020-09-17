@@ -23,6 +23,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatBadgeModule } from "@angular/material/badge";
 
 import { NgApexchartsModule } from "ng-apexcharts";
 
@@ -94,6 +95,7 @@ import { NotificationComponent } from './user/notification/notification.componen
     MatPaginatorModule,
     MatExpansionModule,
     MatCheckboxModule,
+    MatBadgeModule,
     NgApexchartsModule,
     NgxCaptchaModule,
     HttpClientModule

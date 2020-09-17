@@ -647,7 +647,6 @@ router.post("/notifyFollower", (req, res, next) => {
 router.get("/getNotReadNotifications/:id", (req, res, next) => {
     Notification.find({ idUser: req.params.id, read: "0" })
         .then(notif => {
-            console.log(notif);
             res.status(200).json({
                 message: "Sve je ok",
                 data: notif
@@ -658,7 +657,6 @@ router.get("/getNotReadNotifications/:id", (req, res, next) => {
 router.get("/getAllNotifications/:id", (req, res, next) => {
     Notification.find({ idUser: req.params.id })
         .then(notif => {
-            console.log(notif);
             res.status(200).json({
                 message: "Sve je ok",
                 data: notif

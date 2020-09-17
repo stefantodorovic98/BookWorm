@@ -2,6 +2,9 @@
     <span class="mat-headline">BookWorm</span>
     <span class="spacer"></span>
     <ul>
+        <li *ngIf="loggedUser">
+            <a mat-button routerLink="/bookAdd" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Dodaj knjigu</a>
+        </li>
         <li>
             <a mat-button routerLink="/bookList" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Knjige</a>
         </li>
@@ -23,7 +26,10 @@
         <li *ngIf="loggedUser">
             <a mat-button [routerLink]="['/userInfo',loggedUser._id]" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Profil</a>
         </li>
-        <li *ngIf="loggedUser">
+        <li *ngIf="loggedUser && notificationsNumber>0">
+            <a mat-button [matBadge]="notificationsNumber" matBadgePosition="above" matBadgeColor="accent" [routerLink]="['/notifications',loggedUser._id]" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Obavestenja</a>
+        </li>
+        <li *ngIf="loggedUser && notificationsNumber===0">
             <a mat-button [routerLink]="['/notifications',loggedUser._id]" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="mat-accent" class="mat-body">Obavestenja</a>
         </li>
         <li *ngIf="loggedUser">

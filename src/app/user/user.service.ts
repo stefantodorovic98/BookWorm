@@ -142,6 +142,7 @@ export class UserService {
         localStorage.setItem("logged",JSON.stringify(loggedUser));
         this.userLoginListener.next(response.message);
         this.isUserLoggedListener.next(loggedUser);
+        this.getNotReadNotifications(loggedUser._id);
         this.router.navigate(['/userInfo',response._id]);
       }, error => {
         this.userLoginListener.next(error.error.message);
@@ -228,6 +229,7 @@ export class UserService {
       localStorage.setItem("logged",JSON.stringify(loggedUser));
       this.newPasswordListener.next(response.message);
       this.isUserLoggedListener.next(loggedUser);
+      this.getNotReadNotifications(loggedUser._id);
       this.router.navigate(['/userInfo',response._id]);
     }, error => {
       this.newPasswordListener.next(error.error.message);
