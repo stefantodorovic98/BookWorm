@@ -118,7 +118,7 @@ export class BookService {
       bookData.append("title", title);
       bookData.append("image", image, image.name);
       bookData.append("authors", JSON.stringify(authors));
-      bookData.append("issueDate", issueDate.toDateString());
+      bookData.append("issueDate", issueDate.toLocaleDateString());
       bookData.append("genres", JSON.stringify(genres));
       bookData.append("description", description);
       bookData.append("allowed", allowed);
@@ -189,7 +189,7 @@ export class BookService {
         bookData.append("title", title);
         bookData.append("image", image, image.name);
         bookData.append("authors", JSON.stringify(authors));
-        bookData.append("issueDate", issueDate.toDateString());
+        bookData.append("issueDate", issueDate.toLocaleDateString());
         bookData.append("genres", JSON.stringify(genres));
         bookData.append("description", description);
         this.http.put<{message:string}>('http://localhost:3000/api/books/updateBookNewImage/'+id, bookData)

@@ -8,6 +8,7 @@ import { Notification } from './models/notification.model';
 import { UserEvent } from './models/userEvent.model';
 import { InviteEvent } from './models/inviteEvent.model';
 import { ForumMessage } from './models/forumMessage.model';
+import { UserTime } from './models/UserTime.model';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LoggedUser } from './models/loggedUser.model';
@@ -152,7 +153,7 @@ export class UserService {
         userData.append("lastname", lastname);
         userData.append("username", username);
         userData.append("password", password);
-        userData.append("birthdate", birthdate.toDateString());
+        userData.append("birthdate", birthdate.toLocaleDateString());
         userData.append("city", city);
         userData.append("country", country);
         userData.append("email", email);
@@ -168,7 +169,7 @@ export class UserService {
         const user: User = {
           _id:null, firstname:firstname, lastname:lastname, username:username, password:password,
           birthdate:birthdate, city:city, country:country, email:email, imagePath:null, privilege: null,
-          allowed: null
+          allowed: null, active: null, logDate: null
         };
         this.http.post<{message:string}>('http://localhost:3000/api/user/signupNoImage', user)
           .subscribe((responseData) => {
@@ -189,6 +190,8 @@ export class UserService {
         let loggedUser: LoggedUser = {
           _id:response._id, username: response.username, privilege:response.privilege
         }
+        let logDate: Date = new Date();
+        this.updateUserTime(loggedUser._id, "1", logDate.toLocaleString());
         localStorage.setItem("logged",JSON.stringify(loggedUser));
         this.userLoginListener.next(response.message);
         this.isUserLoggedListener.next(loggedUser);
@@ -201,7 +204,33 @@ export class UserService {
       });
   }
 
+  updateUserTime(idUser: number, active: string, logDate: string){
+    let time: UserTime = {
+      idUser:idUser, active: active, logDate: logDate
+    }
+    this.http.put<{message:string}>('http://localhost:3000/api/user/updateUserTime', time)
+    .subscribe(response => {
+      console.log(response.message)
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  updateUserTimeLogout(idUser: number, active: string){
+    let time: UserTime = {
+      idUser:idUser, active: active, logDate: ""
+    }
+    this.http.put<{message:string}>('http://localhost:3000/api/user/updateUserTimeLogout', time)
+    .subscribe(response => {
+      console.log(response.message)
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
   logoutUser(){
+    let loggedUser: LoggedUser = JSON.parse(localStorage.getItem("logged"));
+    this.updateUserTimeLogout(loggedUser._id, "0");
     localStorage.removeItem("logged");
     this.isUserLoggedListener.next(null);
     this.router.navigate(['/']);
@@ -250,6 +279,8 @@ export class UserService {
       };
       this.http.put<{message:string}>('http://localhost:3000/api/user/changePassword/'+id, temp)
         .subscribe(response => {
+          let loggedUser: LoggedUser = JSON.parse(localStorage.getItem("logged"));
+          this.updateUserTimeLogout(loggedUser._id, "0");
           localStorage.removeItem("logged");
           this.changePasswordListener.next(response.message);
           this.isUserLoggedListener.next(null);
@@ -278,6 +309,8 @@ export class UserService {
       let loggedUser: LoggedUser = {
         _id:response._id, username: response.username, privilege:response.privilege
       }
+      let logDate: Date = new Date();
+      this.updateUserTime(loggedUser._id, "1", logDate.toDateString());
       localStorage.setItem("logged",JSON.stringify(loggedUser));
       this.newPasswordListener.next(response.message);
       this.isUserLoggedListener.next(loggedUser);

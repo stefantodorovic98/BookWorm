@@ -64,6 +64,8 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   private doIFollowSub: Subscription = null;
   followData: Follow = null;
 
+  activeUser: string = "";
+
   constructor(private userService: UserService, private bookService: BookService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -72,6 +74,8 @@ export class UserInfoComponent implements OnInit, OnDestroy {
       this.userSub = this.userService.getUserListener()
       .subscribe((data) => {
         this.user = data;
+        if(this.user.active==='1') this.activeUser = "Korisnik je trenutno aktivan";
+        else this.activeUser = "Poslednji put prijavljen:" + this.user.logDate;
       });
     this.userService.getUser(this.id);
 
@@ -171,8 +175,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   }
 
   configureUser(){
-    console.log(this.userComments.length)
-    //this.router.navigate(['/userConfigure', this.id]);
+    this.router.navigate(['/userConfigure', this.id]);
   }
 
   changePassword(){

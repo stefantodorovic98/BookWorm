@@ -30,7 +30,8 @@ export class EventListComponent implements OnInit, OnDestroy {
         if(!this.updated){
           this.eventsUpdate(this.events);
         }
-        if(!this.loggedUser){
+        else if(!this.loggedUser){
+          console.log("jednom")
           this.events = this.events.filter(data => {
             if(data.status==='active' && data.type==='public') return true;
             let dateBegin: Date = new Date(data.dateBegin);
@@ -65,7 +66,7 @@ export class EventListComponent implements OnInit, OnDestroy {
       let dateBegin: Date = new Date(data.dateBegin);
       let dateEnd: Date = null;
       if(data.dateEnd!==null) dateEnd = new Date(data.dateEnd);
-      if(data.status==='active'){
+      if(data.status==='active' || data.status==='future'){
         if(now.getTime()<dateBegin.getTime()){
           this.userService.eventUpdate(data._id);
         }else if(dateEnd && now.getTime()>dateEnd.getTime()){

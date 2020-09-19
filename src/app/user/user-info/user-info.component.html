@@ -5,6 +5,9 @@
                 <mat-card-header>
                     <mat-card-title>Informacije o korisniku</mat-card-title>
                 </mat-card-header>
+                <mat-card-header>
+                    {{activeUser}}
+                </mat-card-header>
             </td>
             <td>
                 <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="configureUser()" *ngIf="configureCondition">

@@ -12,7 +12,9 @@ const userSchema = mongoose.Schema({
     country: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     privilege: { type: String, required: true },
-    allowed: { type: String, required: true }
+    allowed: { type: String, required: true },
+    active: { type: String, required: true },
+    logDate: { type: String, required: true }
 });
 
 userSchema.plugin(uniqueValidator);

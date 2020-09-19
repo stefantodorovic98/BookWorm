@@ -11,4 +11,6 @@ export interface User {
   email: string;
   privilege: string;
   allowed: string;
+  active: string;
+  logDate: string;
 }

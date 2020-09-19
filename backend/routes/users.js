@@ -40,7 +40,9 @@ router.post("/signupImage", multer({ storage: storage }).single("image"), (req, 
                     country: req.body.country,
                     email: req.body.email,
                     privilege: "A",
-                    allowed: "1"
+                    allowed: "1",
+                    active: "0",
+                    logDate: "0"
                 });
                 user.save()
                     .then(newUser => {
@@ -74,7 +76,9 @@ router.post("/signupImage", multer({ storage: storage }).single("image"), (req, 
                     country: req.body.country,
                     email: req.body.email,
                     privilege: "U",
-                    allowed: "0"
+                    allowed: "0",
+                    active: "0",
+                    logDate: "0"
                 });
                 user.save()
                     .then(newUser => {
@@ -102,7 +106,7 @@ router.post("/signupNoImage", (req, res, next) => {
         fs.copyFileSync("backend/images/profileGenericImage/profile.png", path);
         const url = req.protocol + "://" + req.get("host");
         let date = new Date(req.body.birthdate);
-        let dateString = date.toDateString();
+        let dateString = date.toLocaleDateString();
         bcrypt.hash(req.body.password, 10)
             .then(hash => {
                 const user = new User({
@@ -116,7 +120,9 @@ router.post("/signupNoImage", (req, res, next) => {
                     country: req.body.country,
                     email: req.body.email,
                     privilege: "A",
-                    allowed: "1"
+                    allowed: "1",
+                    active: "0",
+                    logDate: "0"
                 });
                 user.save()
                     .then(newUser => {
@@ -140,7 +146,7 @@ router.post("/signupNoImage", (req, res, next) => {
         fs.copyFileSync("backend/images/profileGenericImage/profile.png", path);
         const url = req.protocol + "://" + req.get("host");
         let date = new Date(req.body.birthdate);
-        let dateString = date.toDateString();
+        let dateString = date.toLocaleDateString();
         bcrypt.hash(req.body.password, 10)
             .then(hash => {
                 const user = new User({
@@ -154,7 +160,9 @@ router.post("/signupNoImage", (req, res, next) => {
                     country: req.body.country,
                     email: req.body.email,
                     privilege: "U",
-                    allowed: "0"
+                    allowed: "0",
+                    active: "0",
+                    logDate: "0"
                 });
                 user.save()
                     .then(newUser => {
@@ -215,6 +223,51 @@ router.post("/login", (req, res, next) => {
         });
 });
 
+router.put("/updateUserTime", (req, res, next) => {
+    User.updateOne({ _id: req.body.idUser }, {
+            active: req.body.active,
+            logDate: req.body.logDate
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.put("/updateUserTimeLogout", (req, res, next) => {
+    User.updateOne({ _id: req.body.idUser }, {
+            active: req.body.active
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
 router.get("/getUser/:id", (req, res, next) => {
     User.findById(req.params.id)
         .then(user => {
@@ -227,7 +280,7 @@ router.get("/getUser/:id", (req, res, next) => {
 
 router.put("/updateUser/:id", (req, res, next) => {
     let date = new Date(req.body.birthdate);
-    let dateString = date.toDateString();
+    let dateString = date.toLocaleDateString();
     User.updateOne({ _id: req.params.id }, {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
@@ -691,11 +744,11 @@ router.get("/markReadNotification/:id", (req, res, next) => {
 
 router.post("/addEvent", (req, res, next) => {
     let dateBegin = new Date(req.body.dateBegin);
-    let dateBeginString = dateBegin.toDateString();
+    let dateBeginString = dateBegin.toLocaleDateString();
     let dateEndString = "0";
     if (req.body.dateEnd) {
         let dateEnd = new Date(req.body.dateEnd);
-        dateEndString = dateEnd.toDateString();
+        dateEndString = dateEnd.toLocaleDateString();
     }
     const userEvent = new UserEvent({
         idUser: req.body.idUser,
