@@ -1,4 +1,5 @@
-<mat-card>
+<mat-card *ngIf="book">
+    <button mat-button type="button" color="accent" matSuffix aria-label="Configure" [routerLink]="['/bookInfo', book._id]">Nazad</button>
     <mat-card-title color="primary">
         Dodaj knjigu
     </mat-card-title>
@@ -78,7 +79,6 @@
         <mat-error *ngIf="message!=null">
             {{message}}
         </mat-error>
-        <button mat-raised-button color="primary" type="submit">Dodaj knjigu</button>
-        <p>{{bookConfigureForm.status}}</p>
+        <button mat-raised-button color="primary" type="submit">Azuriraj knjigu</button>
     </form>
 </mat-card>

@@ -3,6 +3,10 @@
         <tr>
             <td>
                 <mat-card-header>
+                    <button mat-button type="button" matSuffix aria-label="Configure" [routerLink]="['/bookList']">Nazad</button>
+                </mat-card-header>
+
+                <mat-card-header>
                     <mat-card-title>Informacije o knjizi</mat-card-title>
                 </mat-card-header>
             </td>
@@ -43,6 +47,16 @@
                         <td class="second">
                             <h2>
                                 {{book.genres}}
+                            </h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="first">
+                            <h2>Ocena</h2>
+                        </td>
+                        <td class="second">
+                            <h2>
+                                {{book.averageMark}}
                             </h2>
                         </td>
                     </tr>

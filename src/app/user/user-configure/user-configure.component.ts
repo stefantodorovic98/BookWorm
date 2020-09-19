@@ -18,6 +18,7 @@ export class UserConfigureComponent implements OnInit, OnDestroy {
   message: string = " ";
   userConfigureSub: Subscription;
   userSub: Subscription;
+  user: User = null;
 
   constructor(private service: UserService, private route: ActivatedRoute) { }
 
@@ -32,10 +33,13 @@ export class UserConfigureComponent implements OnInit, OnDestroy {
     this.id = this.route.snapshot.params.id;
     this.userSub = this.service.getUserListener()
       .subscribe((data) => {
+        let date: string = ""+data.birthdate;
+        let arr = date.split('.');
+        this.user = data;
         this.configureForm.setValue({
           firstname: data.firstname,
           lastname: data.lastname,
-          birthdate: new Date(data.birthdate),
+          birthdate: new Date(+arr[2],+arr[1]-1,+arr[0]),
           city: data.city,
           country: data.country
         });

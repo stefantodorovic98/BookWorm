@@ -66,3 +66,7 @@ a {
     margin: 35px auto;
     padding: 0;
 }
+
+.mat-column-title {
+    flex: 0 0 40%;
+}

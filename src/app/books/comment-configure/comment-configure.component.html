@@ -1,4 +1,5 @@
-<mat-card>
+<mat-card *ngIf="comment">
+    <button mat-button type="button" color="accent" matSuffix aria-label="Configure" [routerLink]="['/bookInfo', comment.idBook]">Nazad</button>
     <mat-card-title>Uredi komentar</mat-card-title>
     <form (submit)="onCommentConfigure()" [formGroup]="commentConfigureForm">
         <div class="App">

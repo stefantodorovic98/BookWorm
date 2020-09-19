@@ -105,8 +105,9 @@ router.post("/signupNoImage", (req, res, next) => {
         const path = "backend/images/profileImages/" + name;
         fs.copyFileSync("backend/images/profileGenericImage/profile.png", path);
         const url = req.protocol + "://" + req.get("host");
-        let date = new Date(req.body.birthdate);
-        let dateString = date.toLocaleDateString();
+        let dateString = new String(date.toLocaleDateString());
+        let arr = dateString.split('-');
+        let newDateString = arr[2] + '.' + arr[1] + '.' + arr[0];
         bcrypt.hash(req.body.password, 10)
             .then(hash => {
                 const user = new User({
@@ -115,7 +116,7 @@ router.post("/signupNoImage", (req, res, next) => {
                     imagePath: url + "/images/profileImages/" + name,
                     username: req.body.username,
                     password: hash,
-                    birthdate: dateString,
+                    birthdate: newDateString,
                     city: req.body.city,
                     country: req.body.country,
                     email: req.body.email,
@@ -145,8 +146,9 @@ router.post("/signupNoImage", (req, res, next) => {
         const path = "backend/images/profileImages/" + name;
         fs.copyFileSync("backend/images/profileGenericImage/profile.png", path);
         const url = req.protocol + "://" + req.get("host");
-        let date = new Date(req.body.birthdate);
-        let dateString = date.toLocaleDateString();
+        let dateString = new String(date.toLocaleDateString());
+        let arr = dateString.split('-');
+        let newDateString = arr[2] + '.' + arr[1] + '.' + arr[0];
         bcrypt.hash(req.body.password, 10)
             .then(hash => {
                 const user = new User({
@@ -155,7 +157,7 @@ router.post("/signupNoImage", (req, res, next) => {
                     imagePath: url + "/images/profileImages/" + name,
                     username: req.body.username,
                     password: hash,
-                    birthdate: dateString,
+                    birthdate: newDateString,
                     city: req.body.city,
                     country: req.body.country,
                     email: req.body.email,
@@ -280,11 +282,13 @@ router.get("/getUser/:id", (req, res, next) => {
 
 router.put("/updateUser/:id", (req, res, next) => {
     let date = new Date(req.body.birthdate);
-    let dateString = date.toLocaleDateString();
+    let dateString = new String(date.toLocaleDateString());
+    let arr = dateString.split('-');
+    let newDateString = arr[2] + '.' + arr[1] + '.' + arr[0];
     User.updateOne({ _id: req.params.id }, {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
-            birthdate: dateString,
+            birthdate: newDateString,
             city: req.body.city,
             country: req.body.country
         })
@@ -374,7 +378,7 @@ router.get("/resetPassword/:email", (req, res, next) => {
                 });
             } else if (user.allowed === "0") {
                 res.status(500).json({
-                    message: "Unesen je mail naloga koji jos uvijek nije odobren!",
+                    message: "Unesen je mail naloga koji jos uvek nije odobren!",
                     _id: null
                 });
             } else {

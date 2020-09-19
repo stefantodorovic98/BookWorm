@@ -20,9 +20,9 @@ export class BookInfoComponent implements OnInit, OnDestroy {
 
   book: Book;
   userBook: UserBook = null;
-  private bookSub: Subscription;
+  private bookSub: Subscription = null;
   private userBookSub: Subscription = null;
-  private userBookReqSub: Subscription;
+  private userBookReqSub: Subscription = null;
   private userCommentSub: Subscription = null;
 
   loggedUser: LoggedUser = null;
@@ -49,10 +49,10 @@ export class BookInfoComponent implements OnInit, OnDestroy {
   commentMessage: string = " ";
 
   displayedColumnsForUserComments: string[] = ['author', 'rating', 'comment'];
-  private getAllCommentsForBookSub: Subscription;
+  private getAllCommentsForBookSub: Subscription = null;
   comments: Comment[] = [];
 
-  private usersMeFollowSub: Subscription;
+  private usersMeFollowSub: Subscription = null;
   usersMeFollow: Follow[] = [];
 
   constructor(private bookService: BookService, private userService: UserService ,private route: ActivatedRoute, private router: Router) { }
@@ -69,6 +69,7 @@ export class BookInfoComponent implements OnInit, OnDestroy {
     this.bookSub = this.bookService.getBookListener()
       .subscribe((data) => {
         this.book = data;
+        this.book.averageMark = +this.book.averageMark.toFixed(2);
         this.book = this.niceOutput(this.book);
         if(this.loggedUser){
           this.userBookSub = this.bookService.getUserBookListener()
@@ -116,11 +117,13 @@ export class BookInfoComponent implements OnInit, OnDestroy {
       });
     this.bookService.getAllCommentsForBook(this.id);
 
-    this.usersMeFollowSub = this.userService.getUsersMeFollowListener()
-      .subscribe(data => {
-        this.usersMeFollow = data;
-      });
-    this.userService.getAllUsersMeFollow(this.loggedUser._id)
+    if(this.loggedUser){
+      this.usersMeFollowSub = this.userService.getUsersMeFollowListener()
+        .subscribe(data => {
+          this.usersMeFollow = data;
+        });
+      this.userService.getAllUsersMeFollow(this.loggedUser._id)
+    }
   }
 
   ngOnDestroy(): void {
@@ -133,7 +136,9 @@ export class BookInfoComponent implements OnInit, OnDestroy {
       this.userCommentSub.unsubscribe();
     }
     this.getAllCommentsForBookSub.unsubscribe();
-    this.usersMeFollowSub.unsubscribe();
+    if(this.usersMeFollowSub){
+      this.usersMeFollowSub.unsubscribe();
+    }
   }
 
   niceOutput(book:Book):Book{

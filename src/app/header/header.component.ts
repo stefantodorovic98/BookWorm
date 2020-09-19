@@ -41,7 +41,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
           .subscribe(data => {
             this.notifications = data;
             this.notificationsNumber = this.notifications.length;
-            console.log(this.notificationsNumber)
           });
         this.userService.getNotReadNotifications(this.loggedUser._id);
       }
@@ -50,7 +49,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
           .subscribe(data => {
             this.invitations = data;
             this.invitationsNumber = this.invitations.length;
-            console.log(this.invitationsNumber)
           });
         this.userService.getAllInvitations(this.loggedUser._id);
       }
@@ -59,7 +57,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
           .subscribe(data => {
             this.requests = data;
             this.requestsNumber = this.requests.length;
-            console.log(this.requestsNumber)
           });
         this.userService.getAllRequests(this.loggedUser._id);
       }

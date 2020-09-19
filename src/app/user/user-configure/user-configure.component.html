@@ -1,4 +1,5 @@
-<mat-card>
+<mat-card *ngIf="user">
+    <button mat-button type="button" color="accent" matSuffix mat-icon-button aria-label="Configure" [routerLink]="['/userInfo', user._id]">Nazad</button>
     <mat-card-title>
         Promena podataka
     </mat-card-title>

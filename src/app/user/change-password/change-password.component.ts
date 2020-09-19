@@ -14,7 +14,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 
   changePasswordForm: FormGroup;
   message: string;
-  id: number;
+  id: number = null;
   changePasswordSub: Subscription;
 
   constructor(private service: UserService, private route: ActivatedRoute) { }

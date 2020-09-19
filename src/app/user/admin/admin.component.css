@@ -36,3 +36,11 @@ mat-form-field {
 .listGenre {
     width: 60%;
 }
+
+.mat-column-genres {
+    flex: 0 0 24%;
+}
+
+.mat-column-path {
+    flex: 0 0 20%;
+}

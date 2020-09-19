@@ -31,7 +31,6 @@ export class EventListComponent implements OnInit, OnDestroy {
           this.eventsUpdate(this.events);
         }
         else if(!this.loggedUser){
-          console.log("jednom")
           this.events = this.events.filter(data => {
             if(data.status==='active' && data.type==='public') return true;
             let dateBegin: Date = new Date(data.dateBegin);
@@ -59,7 +58,6 @@ export class EventListComponent implements OnInit, OnDestroy {
   }
 
   eventsUpdate(events: UserEvent[]){
-    console.log("Azurirano")
     let now = new Date();
     for(let i=0;i<events.length;i++){
       let data = events[i];

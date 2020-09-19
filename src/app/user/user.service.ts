@@ -326,7 +326,6 @@ export class UserService {
   getUserRegisterRequests(){
     this.http.get<{message:string, data:User[]}>('http://localhost:3000/api/user/getUserRegisterRequests')
       .subscribe((responseData) => {
-        console.log(responseData.message);
         this.userRegisterRequestsListener.next([...responseData.data]);
       });
   }
@@ -334,7 +333,6 @@ export class UserService {
   acceptRegisterRequest(id:number){
     this.http.get<{message:string}>('http://localhost:3000/api/user/acceptRegisterRequest/'+id)
       .subscribe(responseData => {
-        console.log(responseData.message);
         window.location.reload();
       });
   }
@@ -342,7 +340,6 @@ export class UserService {
   refuseRegisterRequest(id:number){
     this.http.delete<{message:string}>('http://localhost:3000/api/user/refuseRegisterRequest/'+id)
     .subscribe(responseData => {
-      console.log(responseData.message);
       window.location.reload();
     });
   }
@@ -350,7 +347,6 @@ export class UserService {
   getRegistredUsers(){
     this.http.get<{message:string, data:User[]}>('http://localhost:3000/api/user/getRegistredUsers')
       .subscribe(responseData => {
-        console.log(responseData.message);
         this.registredUsersListener.next([...responseData.data]);
       });
   }
@@ -358,7 +354,6 @@ export class UserService {
   upgradeToModerator(id:number){
     this.http.get<{message:string}>('http://localhost:3000/api/user/upgradeToModerator/'+id)
       .subscribe(responseData => {
-        console.log(responseData.message);
         window.location.reload();
       });
   }
@@ -394,7 +389,6 @@ export class UserService {
     };
     this.http.post<{message:string}>('http://localhost:3000/api/user/followUser', data)
     .subscribe((responseData) => {
-      console.log(responseData.message)
       window.location.reload();
     }, error => {
       console.log(error.error.message)
@@ -407,7 +401,6 @@ export class UserService {
     };
     this.http.post<{message:string}>('http://localhost:3000/api/user/unfollowUser', data)
     .subscribe((responseData) => {
-      console.log(responseData.message)
       window.location.reload();
     }, error => {
       console.log(error.error.message)
@@ -474,7 +467,6 @@ export class UserService {
   markReadNotification(id: number) {
     this.http.get<{message:string}>('http://localhost:3000/api/user/markReadNotification/'+id)
       .subscribe((responseData) => {
-        console.log(responseData.message);
         window.location.reload();
       });
   }
@@ -494,7 +486,6 @@ export class UserService {
       };
       this.http.post<{message:string, id: number}>('http://localhost:3000/api/user/addEvent', data)
       .subscribe((responseData) => {
-        console.log(responseData.message + " " + responseData.id)
         for(let i=0; i<invitedUsers.length; i++){
           this.userInvite(responseData.id, idUser, username, invitedUsers[i], title)
         }
@@ -537,7 +528,6 @@ export class UserService {
         for(let i=0;i<responseData.data.length;i++){
           if(responseData.data[i].dateEnd==="0") responseData.data[i].dateEnd=null;
         }
-        console.log(responseData)
         this.eventsListener.next([...responseData.data])
       });
   }
@@ -553,7 +543,6 @@ export class UserService {
   closeEvent(id: number){
     this.http.get<{message:string}>('http://localhost:3000/api/user/closeEvent/'+id)
       .subscribe((responseData) => {
-        console.log(responseData.message)
         window.location.reload();
       });
   }
@@ -561,7 +550,6 @@ export class UserService {
   activeEvent(id: number){
     this.http.get<{message:string}>('http://localhost:3000/api/user/activeEvent/'+id)
       .subscribe((responseData) => {
-        console.log(responseData.message)
         window.location.reload();
       });
   }
@@ -586,7 +574,6 @@ export class UserService {
     };
     this.http.post<{message:string}>('http://localhost:3000/api/user/requestInvite', data)
     .subscribe((responseData) => {
-      console.log(responseData.message)
       window.location.reload();
     }, error => {
       console.log(error.error.message)
@@ -612,16 +599,13 @@ export class UserService {
   getAllRequests(id: number){
     this.http.get<{message:string, data: InviteEvent[]}>('http://localhost:3000/api/user/getAllRequests/'+id)
       .subscribe((responseData) => {
-        console.log(responseData)
         this.requestsListener.next([...responseData.data])
       });
   }
 
-
   getAllInvitations(id: number){
     this.http.get<{message:string, data: InviteEvent[]}>('http://localhost:3000/api/user/getAllInvitations/'+id)
       .subscribe((responseData) => {
-        console.log(responseData)
         this.invitationsListener.next([...responseData.data])
       });
   }
@@ -661,7 +645,6 @@ export class UserService {
   acceptInvitation(id: number){
     this.http.get<{message:string}>('http://localhost:3000/api/user/acceptInvitation/'+id)
       .subscribe((responseData) => {
-        console.log(responseData.message)
         window.location.reload();
       });
   }
@@ -669,7 +652,6 @@ export class UserService {
   refuseInvitation(id:number){
     this.http.delete<{message:string}>('http://localhost:3000/api/user/refuseInvitation/'+id)
     .subscribe(responseData => {
-      console.log(responseData.message);
       window.location.reload();
     });
   }
@@ -680,7 +662,6 @@ export class UserService {
     }
     this.http.post<{message:string}>('http://localhost:3000/api/user/addForumMessage', data)
     .subscribe((responseData) => {
-      console.log(responseData.message)
       window.location.reload();
     }, error => {
       console.log(error.error.message)
@@ -690,7 +671,6 @@ export class UserService {
   getForumMessages(id: number){
     this.http.get<{message:string, data: ForumMessage[]}>('http://localhost:3000/api/user/getForumMessages/'+id)
       .subscribe((responseData) => {
-        console.log(responseData.data)
         this.forumMessagesListener.next([...responseData.data])
       });
   }

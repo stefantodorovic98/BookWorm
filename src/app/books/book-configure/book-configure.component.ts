@@ -44,6 +44,8 @@ export class BookConfigureComponent implements OnInit, OnDestroy {
     });
     this.bookSub = this.bookService.getBookListener()
       .subscribe((data) => {
+        let date: string = ""+data.issueDate;
+        let arr = date.split('.');
         this.book = data;
         this.authors = JSON.parse(data.authors);
         this.genres = JSON.parse(data.genres);
@@ -52,7 +54,7 @@ export class BookConfigureComponent implements OnInit, OnDestroy {
           title: data.title,
           image: null,
           author:null,
-          issueDate: new Date(data.issueDate),
+          issueDate: new Date(+arr[2],+arr[1]-1,+arr[0]),
           genres: this.genres,
           description: data.description
         });

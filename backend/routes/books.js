@@ -50,12 +50,14 @@ router.post("/addBookNoImage", (req, res, next) => {
     fs.copyFileSync("backend/images/bookGenericImage/book.jpg", path);
     const url = req.protocol + "://" + req.get("host");
     let date = new Date(req.body.issueDate);
-    let dateString = date.toLocaleDateString();
+    let dateString = new String(date.toLocaleDateString());
+    let arr = dateString.split('-');
+    let newDateString = arr[2] + '.' + arr[1] + '.' + arr[0];
     const book = new Books({
         title: req.body.title,
         imagePath: url + "/images/bookImages/" + name,
         authors: req.body.authors,
-        issueDate: dateString,
+        issueDate: newDateString,
         genres: req.body.genres,
         description: req.body.description,
         averageMark: 0,
@@ -234,12 +236,14 @@ router.put("/updateBookNewImage/:id", multer({ storage: storage }).single("image
 
 router.put("/updateBookOldImage/:id", (req, res, next) => {
     let date = new Date(req.body.issueDate);
-    let dateString = date.toLocaleDateString();
+    let dateString = new String(date.toLocaleDateString());
+    let arr = dateString.split('-');
+    let newDateString = arr[2] + '.' + arr[1] + '.' + arr[0];
     Books.updateOne({ _id: req.params.id }, {
             title: req.body.title,
             imagePath: req.body.imagePath,
             authors: req.body.authors,
-            issueDate: dateString,
+            issueDate: newDateString,
             genres: req.body.genres,
             description: req.body.description
         })
@@ -269,12 +273,14 @@ router.put("/updateBookDefaultImage/:id", (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
     const image = url + "/images/bookImages/" + name;
     let date = new Date(req.body.issueDate);
-    let dateString = date.toLocaleDateString();
+    let dateString = new String(date.toLocaleDateString());
+    let arr = dateString.split('-');
+    let newDateString = arr[2] + '.' + arr[1] + '.' + arr[0];
     Books.updateOne({ _id: req.params.id }, {
             title: req.body.title,
             imagePath: image,
             authors: req.body.authors,
-            issueDate: dateString,
+            issueDate: newDateString,
             genres: req.body.genres,
             description: req.body.description
         })
