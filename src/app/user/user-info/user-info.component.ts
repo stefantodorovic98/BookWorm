@@ -202,7 +202,7 @@ export class UserInfoComponent implements OnInit, OnDestroy {
   }
 
   follow(){
-    this.userService.followUser(this.loggedUser._id, this.id);
+    this.userService.followUser(this.loggedUser._id, this.loggedUser.username, this.id, this.user.username);
   }
 
   unfollow(){

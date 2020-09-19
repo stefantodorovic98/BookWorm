@@ -1,0 +1,117 @@
+<div *ngIf="!isActive && !isOwner && !invitation">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Dogadjaj nije aktivan</mat-card-title>
+        </mat-card-header>
+    </mat-card>
+</div>
+<div *ngIf="isActive && !isOwner && !invitation && isPrivate">
+    <mat-card>
+        <table>
+            <tr>
+                <td>
+                    <mat-card-header>
+                        <mat-card-title>Informacije o desavanju</mat-card-title>
+                    </mat-card-header>
+                </td>
+                <td>
+                    <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="requestInvite()" *ngIf="!invitation && !isOwner && isActive && canIActivate && !request && !notAccepted">
+                        Posalji zahtev<mat-icon>add</mat-icon>
+                    </button>
+                    <span *ngIf="!invitation && !isOwner && isActive && canIActivate && request">Zahtev je vec poslan</span>
+                    <span *ngIf="!invitation && !isOwner && isActive && canIActivate && !request && notAccepted">Domacin Vas je pozvao</span>
+                </td>
+            </tr>
+        </table>
+    </mat-card>
+</div>
+<div *ngIf="isOwner || invitation || isPublic">
+    <mat-card>
+        <table>
+            <tr>
+                <td>
+                    <mat-card-header>
+                        <mat-card-title>Informacije o desavanju</mat-card-title>
+                    </mat-card-header>
+                </td>
+                <td>
+                    <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="closeEvent()" *ngIf="isOwner && isActive">
+                    Zatvori<mat-icon>clear</mat-icon>
+                </button>
+                    <button mat-button type="button" matSuffix mat-icon-button aria-label="Configure" (click)="activeEvent()" *ngIf="isOwner && !isActive && canIActivate">
+                    Aktiviraj<mat-icon>done</mat-icon>
+                </button>
+            </tr>
+        </table>
+        <table *ngIf="event">
+            <tr>
+                <td class="first">Naslov desavanja</td>
+                <td class="second">{{event.title}}</td>
+            </tr>
+            <tr>
+                <td class="first">Autor desavanja</td>
+                <td class="second">
+                    <a mat-button [routerLink]="['/userInfo',event.idUser]">
+                {{event.username}}
+              </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="first">Status</td>
+                <td class="second">{{event.status}}</td>
+            </tr>
+            <tr>
+                <td class="first">Tip</td>
+                <td class="second">{{event.type}}</td>
+            </tr>
+            <tr>
+                <td class="first">Datum pocetka</td>
+                <td class="second">{{event.dateBegin}}</td>
+            </tr>
+            <tr>
+                <td class="first">Datum kraja</td>
+                <td class="second">{{event.dateEnd}}</td>
+            </tr>
+        </table>
+        <table *ngIf="event">
+            <tr>
+                <td>
+                    <h2>Kratak opis desavanja</h2>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>
+                        {{event.description}}
+                    </h3>
+                </td>
+            </tr>
+        </table>
+    </mat-card>
+
+    <mat-card *ngIf="isActive && (invitation || isOwner || isPublic)">
+        <mat-card-title>Napisi komentar</mat-card-title>
+        <form (submit)="addForumMessage()" [formGroup]="forumForm">
+            <mat-form-field appearance="outline">
+                <mat-label>Komentar</mat-label>
+                <textarea matInput rows="4" formControlName="message" placeholder="Napisite komentar"></textarea>
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit">Dodaj komentar</button>
+        </form>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-title>Forum</mat-card-title>
+        <table class="forum">
+            <tr *ngFor="let message of forumMessages">
+                <td>
+                    <div class="message">
+                        <div><b>{{message.username}}</b></div><br>
+                        <div><i>{{message.message}}</i></div>
+                    </div>
+                    <hr>
+                </td>
+            </tr>
+        </table>
+    </mat-card>
+</div>

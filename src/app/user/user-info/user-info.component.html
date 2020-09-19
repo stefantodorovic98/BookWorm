@@ -65,16 +65,11 @@
                 </table>
             </td>
         </tr>
-        <tr>
-            <td style="text-align:center">
-                <button mat-raised-button color="primary" type="button">Promeni sliku</button>
-            </td>
-        </tr>
     </table>
     <table>
         <tr>
             <td style="text-align:center">
-                <button mat-raised-button color="primary" type="button" (click)="changePassword()">Promeni lozinku</button>
+                <button mat-raised-button color="primary" type="button" (click)="changePassword()" *ngIf="configureCondition">Promeni lozinku</button>
             </td>
         </tr>
     </table>

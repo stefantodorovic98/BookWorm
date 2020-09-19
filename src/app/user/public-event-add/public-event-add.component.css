@@ -1,0 +1,17 @@
+mat-card {
+    width: 60%;
+    margin: 20px auto;
+}
+
+mat-card-title {
+    text-align: center;
+}
+
+mat-checkbox {
+    display: inline-block;
+    width: 100%;
+}
+
+mat-form-field {
+    width: 30%;
+}

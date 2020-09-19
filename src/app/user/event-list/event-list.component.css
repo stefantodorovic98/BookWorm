@@ -1,0 +1,24 @@
+mat-table {
+    width: 100%;
+    margin: 20px auto;
+}
+
+mat-card {
+    width: 80%;
+    margin: 20px auto;
+}
+
+mat-card-title {
+    text-align: center;
+}
+
+
+/*  */
+
+mat-form-field {
+    width: 100%;
+}
+
+.mat-column-description {
+    flex: 0 0 30%;
+}

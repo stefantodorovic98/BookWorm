@@ -24,6 +24,7 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatBadgeModule } from "@angular/material/badge";
+import {MatStepperModule} from '@angular/material/stepper';
 
 import { NgApexchartsModule } from "ng-apexcharts";
 
@@ -49,6 +50,10 @@ import { StarRatingComponent } from './books/star-rating/star-rating.component';
 import { CommentConfigureComponent } from './books/comment-configure/comment-configure.component';
 import { UserListComponent } from './user/user-list/user-list.component';
 import { NotificationComponent } from './user/notification/notification.component';
+import { PrivateEventAddComponent } from './user/private-event-add/private-event-add.component';
+import { EventListComponent } from './user/event-list/event-list.component';
+import { EventInfoComponent } from './user/event-info/event-info.component';
+import { PublicEventAddComponent } from './user/public-event-add/public-event-add.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +77,11 @@ import { NotificationComponent } from './user/notification/notification.componen
     StarRatingComponent,
     CommentConfigureComponent,
     UserListComponent,
-    NotificationComponent
+    NotificationComponent,
+    PrivateEventAddComponent,
+    EventListComponent,
+    EventInfoComponent,
+    PublicEventAddComponent
   ],
   imports: [
     BrowserModule,
@@ -96,6 +105,7 @@ import { NotificationComponent } from './user/notification/notification.componen
     MatExpansionModule,
     MatCheckboxModule,
     MatBadgeModule,
+    MatStepperModule,
     NgApexchartsModule,
     NgxCaptchaModule,
     HttpClientModule

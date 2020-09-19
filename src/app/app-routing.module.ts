@@ -18,6 +18,9 @@ import { ModeratorComponent } from './user/moderator/moderator.component';
 import { CommentConfigureComponent } from './books/comment-configure/comment-configure.component';
 import { UserListComponent } from './user/user-list/user-list.component';
 import { NotificationComponent } from './user/notification/notification.component';
+import { PrivateEventAddComponent } from './user/private-event-add/private-event-add.component';
+import { EventListComponent } from './user/event-list/event-list.component';
+import { EventInfoComponent } from './user/event-info/event-info.component';
 
 const routes: Routes = [
   {path:"", component:LoginComponent},
@@ -37,7 +40,10 @@ const routes: Routes = [
   {path:"moderator/:id", component: ModeratorComponent},
   {path:"commentConfigure/:id", component: CommentConfigureComponent},
   {path:"userList", component: UserListComponent},
-  {path:"notifications/:id", component: NotificationComponent}
+  {path:"notifications/:id", component: NotificationComponent},
+  {path:"privateEventAdd", component: PrivateEventAddComponent},
+  {path:"eventList", component: EventListComponent},
+  {path:"eventInfo/:id", component: EventInfoComponent}
 ];
 
 @NgModule({

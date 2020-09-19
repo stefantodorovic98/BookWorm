@@ -7,6 +7,9 @@ const nodemailer = require('nodemailer');
 const User = require('../models/user');
 const Follow = require('../models/follow');
 const Notification = require('../models/notification');
+const UserEvent = require('../models/userEvent');
+const InviteEvent = require('../models/inviteEvent');
+const ForumMessage = require('../models/forumMessage');
 
 const router = express.Router();
 
@@ -557,7 +560,9 @@ router.post("/findUsers", (req, res, next) => {
 router.post("/followUser", (req, res, next) => {
     const follow = new Follow({
         idUser: req.body.idUser,
-        whomFollows: req.body.whomFollows
+        username: req.body.username,
+        whomFollows: req.body.whomFollows,
+        whomUsername: req.body.whomUsername
     });
     follow.save()
         .then(newFollow => {
@@ -585,7 +590,6 @@ router.post("/doIFollow", (req, res, next) => {
 router.get("/getAllUsersIFollow/:id", (req, res, next) => {
     Follow.find({ idUser: req.params.id })
         .then(user => {
-            console.log(user);
             res.status(200).json({
                 message: "Sve je ok",
                 data: user
@@ -596,7 +600,6 @@ router.get("/getAllUsersIFollow/:id", (req, res, next) => {
 router.get("/getAllUsersMeFollow/:id", (req, res, next) => {
     Follow.find({ whomFollows: req.params.id })
         .then(user => {
-            console.log(user);
             res.status(200).json({
                 message: "Sve je ok",
                 data: user
@@ -683,6 +686,293 @@ router.get("/markReadNotification/:id", (req, res, next) => {
             res.status(500).json({
                 message: "Problem s azuriranjem"
             })
+        });
+});
+
+router.post("/addEvent", (req, res, next) => {
+    let dateBegin = new Date(req.body.dateBegin);
+    let dateBeginString = dateBegin.toDateString();
+    let dateEndString = "0";
+    if (req.body.dateEnd) {
+        let dateEnd = new Date(req.body.dateEnd);
+        dateEndString = dateEnd.toDateString();
+    }
+    const userEvent = new UserEvent({
+        idUser: req.body.idUser,
+        username: req.body.username,
+        title: req.body.title,
+        dateBegin: dateBeginString,
+        dateEnd: dateEndString,
+        description: req.body.description,
+        type: req.body.type,
+        status: req.body.status
+    });
+    userEvent.save()
+        .then(result => {
+            console.log(result)
+            res.status(201).json({
+                message: "Ok",
+                id: result._id
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Vec postoji"
+            })
+        });
+});
+
+router.get("/updateEvent/:id", (req, res, next) => {
+    UserEvent.updateOne({ _id: req.params.id }, {
+            status: "closed"
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.get("/getAllEvents", (req, res, next) => {
+    UserEvent.find()
+        .then(result => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: result
+            });
+        });
+});
+
+router.get("/getOneEvent/:id", (req, res, next) => {
+    UserEvent.findOne({ _id: req.params.id })
+        .then(result => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: result
+            });
+        });
+});
+
+router.get("/closeEvent/:id", (req, res, next) => {
+    UserEvent.updateOne({ _id: req.params.id }, {
+            status: "closed"
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.get("/activeEvent/:id", (req, res, next) => {
+    UserEvent.updateOne({ _id: req.params.id }, {
+            status: "active"
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.post("/inviteUserToEvent", (req, res, next) => {
+    const invite = new InviteEvent({
+        idEvent: req.body.idEvent,
+        idHost: req.body.idHost,
+        idGuest: req.body.idGuest,
+        text: req.body.text,
+        hostInvitation: req.body.hostInvitation,
+        userRequest: req.body.userRequest,
+        status: req.body.status
+    });
+    invite.save()
+        .then(result => {
+            res.status(201).json({
+                message: "Ok"
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Vec postoji"
+            })
+        });
+});
+
+router.post("/requestInvite", (req, res, next) => {
+    const invite = new InviteEvent({
+        idEvent: req.body.idEvent,
+        idHost: req.body.idHost,
+        idGuest: req.body.idGuest,
+        text: req.body.text,
+        hostInvitation: req.body.hostInvitation,
+        userRequest: req.body.userRequest,
+        status: req.body.status
+    });
+    invite.save()
+        .then(result => {
+            res.status(201).json({
+                message: "Ok"
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Vec postoji"
+            })
+        });
+});
+
+router.post("/getRequest", (req, res, next) => {
+    InviteEvent.findOne({ idGuest: req.body.idGuest, idEvent: req.body.idEvent, userRequest: "1", status: "0" })
+        .then(user => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: user
+            });
+        });
+});
+
+router.get("/getAllRequests/:id", (req, res, next) => {
+    InviteEvent.find({ idHost: req.params.id, userRequest: "1", status: "0" })
+        .then(result => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: result
+            });
+        });
+});
+
+router.get("/getAllInvitations/:id", (req, res, next) => {
+    InviteEvent.find({ idGuest: req.params.id, hostInvitation: "1", status: "0" })
+        .then(result => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: result
+            });
+        });
+});
+
+router.post("/getInvitation", (req, res, next) => {
+    InviteEvent.findOne({ idGuest: req.body.idGuest, idEvent: req.body.idEvent, status: "1" })
+        .then(user => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: user
+            });
+        });
+});
+
+router.post("/getNotAcceptedInvitation", (req, res, next) => {
+    InviteEvent.findOne({ idGuest: req.body.idGuest, idEvent: req.body.idEvent, status: "0" })
+        .then(user => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: user
+            });
+        });
+});
+
+router.get("/acceptInvitation/:id", (req, res, next) => {
+    InviteEvent.updateOne({ _id: req.params.id }, {
+            status: "1"
+        })
+        .then(result => {
+            if (result.nModified > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.delete("/refuseInvitation/:id", (req, res, next) => {
+    InviteEvent.deleteOne({ _id: req.params.id })
+        .then(result => {
+            if (result.deletedCount > 0) {
+                res.status(200).json({
+                    message: "Ok"
+                });
+            } else {
+                res.status(500).json({
+                    message: "Nijedno polje nije promenjeno"
+                })
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Problem s azuriranjem"
+            })
+        });
+});
+
+router.post("/addForumMessage", (req, res, next) => {
+    const message = new ForumMessage({
+        idUser: req.body.idUser,
+        username: req.body.username,
+        idEvent: req.body.idEvent,
+        message: req.body.message
+    });
+    message.save()
+        .then(result => {
+            res.status(201).json({
+                message: "Ok"
+            });
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Vec postoji"
+            })
+        });
+});
+
+router.get("/getForumMessages/:id", (req, res, next) => {
+    ForumMessage.find({ idEvent: req.params.id })
+        .then(result => {
+            res.status(200).json({
+                message: "Sve je ok",
+                data: result
+            });
         });
 });
 

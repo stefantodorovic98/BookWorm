@@ -70,7 +70,7 @@
             <mat-label>Kratak opis knjige</mat-label>
             <textarea matInput rows="4" formControlName="description" placeholder="Napisite sadrzaj"></textarea>
             <mat-error *ngIf="bookAddForm.get('description').invalid">
-                Please enter a post content.</mat-error>
+                Unesite opis.</mat-error>
         </mat-form-field>
         <mat-error *ngIf="uslov">
             Mora biti naveden barem jedan autor!

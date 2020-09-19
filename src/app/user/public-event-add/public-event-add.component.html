@@ -1,0 +1,89 @@
+<mat-card>
+    <mat-card-title>Dodaj novo javno desavanje</mat-card-title>
+    <mat-horizontal-stepper linear #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Naziv javnog desavanja</ng-template>
+                <mat-form-field>
+                    <mat-label>Naziv</mat-label>
+                    <input matInput formControlName="title" placeholder="Naziv">
+                    <mat-error *ngIf="firstFormGroup.get('title').invalid">
+                        Polje mora biti popunjeno!
+                    </mat-error>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperNext>Napred</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Datum pocetka</ng-template>
+                <mat-form-field>
+                    <mat-label>Datum</mat-label>
+                    <input matInput [matDatepicker]="myPickerBegin" placeholder="date" formControlName="beginDate" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="myPickerBegin"></mat-datepicker-toggle>
+                    <mat-datepicker #myPickerBegin></mat-datepicker>
+                    <mat-error *ngIf="secondFormGroup.get('beginDate').invalid">
+                        Polje mora biti popunjeno!
+                    </mat-error>
+                </mat-form-field><br>
+                <mat-checkbox (change)="changeStart($event)">
+                    Pocinje danas
+                </mat-checkbox><br>
+                <div>
+                    <button mat-button matStepperPrevious>Nazad</button>
+                    <button mat-button matStepperNext>Napred</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="thirdFormGroup">
+            <form [formGroup]="thirdFormGroup">
+                <ng-template matStepLabel>Datum kraja</ng-template>
+                <mat-form-field>
+                    <mat-label>Datum</mat-label>
+                    <input matInput [matDatepicker]="myPickerEnd" placeholder="date" formControlName="endDate" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="myPickerEnd "></mat-datepicker-toggle>
+                    <mat-datepicker #myPickerEnd></mat-datepicker>
+                    <mat-error *ngIf="thirdFormGroup.get('endDate').invalid">
+                        Polje mora biti popunjeno!
+                    </mat-error>
+                </mat-form-field>
+                <mat-checkbox (change)="changeEnd($event)">
+                    Nema definisan kraj
+                </mat-checkbox><br>
+                <div>
+                    <button mat-button matStepperPrevious>Nazad</button>
+                    <button mat-button matStepperNext>Napred</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="fourthFormGroup">
+            <form [formGroup]="fourthFormGroup">
+                <ng-template matStepLabel>Kratak opis desavanja</ng-template>
+                <mat-form-field>
+                    <mat-label>Opis</mat-label>
+                    <textarea matInput rows="4" formControlName="description" placeholder="Napisite sadrzaj"></textarea>
+                    <mat-error *ngIf="fourthFormGroup.get('description').invalid">
+                        Unesite opis.
+                    </mat-error>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperPrevious>Nazad</button>
+                    <button mat-button matStepperNext>Napred</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Kraj</ng-template>
+            <p>Zavrsio si</p>
+            <div>
+                <button mat-button matStepperPrevious>Nazad</button>
+                <button mat-button (click)="addEvent()">Napravi desavanje</button>
+            </div>
+            <mat-error *ngIf="message!=null">
+                {{message}}
+            </mat-error>
+        </mat-step>
+    </mat-horizontal-stepper>
+</mat-card>

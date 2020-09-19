@@ -24,7 +24,7 @@
         <ng-container matColumnDef="link">
             <mat-header-cell *matHeaderCellDef> Link do obavestenja </mat-header-cell>
             <mat-cell *matCellDef="let element">
-                <button mat-icon-button [routerLink]="['/bookInfo',element.idBook]" [disabled]="element.allowed==='0'">
+                <button mat-icon-button [routerLink]="['/bookInfo',element.idBook]">
                   <mat-icon>info</mat-icon>
                 </button>
             </mat-cell>
@@ -42,6 +42,78 @@
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+</mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">
+        Pozivi na desavanja
+    </mat-card-title>
+    <mat-table [dataSource]="invitations" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="text">
+            <mat-header-cell *matHeaderCellDef> Tekst </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.text}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="accept">
+            <mat-header-cell *matHeaderCellDef> Prihvati poziv </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-icon-button (click)="acceptInvitation(element._id)">
+                    <mat-icon>done</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="refuse">
+            <mat-header-cell *matHeaderCellDef> Odbaci poziv </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-icon-button (click)="refuseInvitation(element._id)">
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForEvent"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForEvent;"></mat-row>
+
+    </mat-table>
+</mat-card>
+
+<mat-card>
+    <mat-card-title color="primary">
+        Zahtevi za ucestovanje na desavanjima
+    </mat-card-title>
+    <mat-table [dataSource]="requests" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="text">
+            <mat-header-cell *matHeaderCellDef> Tekst </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.text}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="accept">
+            <mat-header-cell *matHeaderCellDef> Prihvati poziv </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-icon-button (click)="acceptInvitation(element._id)">
+                  <mat-icon>done</mat-icon>
+              </button>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="refuse">
+            <mat-header-cell *matHeaderCellDef> Odbaci poziv </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-icon-button (click)="refuseInvitation(element._id)">
+                  <mat-icon>clear</mat-icon>
+              </button>
+            </mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForEvent"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForEvent;"></mat-row>
 
     </mat-table>
 </mat-card>

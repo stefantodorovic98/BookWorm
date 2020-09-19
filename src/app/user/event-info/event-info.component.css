@@ -1,0 +1,62 @@
+mat-card {
+    width: 50%;
+    margin: 20px auto;
+    /* background-color: rgba(127, 191, 63, 0.9); */
+    /* background-color: #3FBFBF; */
+    background-color: rgba(63, 63, 191, 0.8);
+    color: white;
+}
+
+mat-card-title {
+    text-align: center;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-style: solid;
+    border-width: 3px;
+    border-color: white;
+    margin: 3px 3px;
+    padding: 16px 3px;
+}
+
+a {
+    font-size: large;
+}
+
+tr,
+th,
+td {
+    /* border-style: solid;
+    border-width: 3px; */
+    font-size: large;
+}
+
+.first {
+    width: 30%;
+    text-align: center;
+}
+
+.second {
+    width: 70%;
+    text-align: center;
+}
+
+.forum {
+    width: 100%;
+    border-style: none;
+}
+
+.message {
+    padding: 16px 16px;
+    background-color: rgba(63, 63, 191, 0.2);
+}
+
+
+/* .disabled-expansion {
+    pointer-events: none;
+} */

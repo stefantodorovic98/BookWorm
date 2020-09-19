@@ -1,0 +1,83 @@
+<mat-card *ngIf="loggedUser">
+    <mat-card-title color="primary">
+        Desavanja
+    </mat-card-title>
+    <mat-table [dataSource]="events" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="author">
+            <mat-header-cell *matHeaderCellDef> Autor </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.username}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+            <mat-header-cell *matHeaderCellDef> Tip </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.type}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="dateBegin">
+            <mat-header-cell *matHeaderCellDef> Datum pocetka </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.dateBegin}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="dateEnd">
+            <mat-header-cell *matHeaderCellDef> Datum zavrsetka </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.dateEnd}} </mat-cell>
+        </ng-container>
+
+
+        <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef> Opis </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="eventInfo">
+            <mat-header-cell *matHeaderCellDef> Link </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <button mat-icon-button [routerLink]="['/eventInfo',element._id]">
+                    <mat-icon>info</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+</mat-card>
+
+<mat-card *ngIf="!loggedUser">
+    <mat-card-title color="primary">
+        Desavanja
+    </mat-card-title>
+    <mat-table [dataSource]="events" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="title">
+            <mat-header-cell *matHeaderCellDef> Naslov </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="dateBegin">
+            <mat-header-cell *matHeaderCellDef> Datum pocetka </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.dateBegin}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumnsForNotLogged"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsForNotLogged;"></mat-row>
+
+    </mat-table>
+</mat-card>

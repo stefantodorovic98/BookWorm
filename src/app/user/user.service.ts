@@ -5,12 +5,14 @@ import { Auth } from './models/auth.model';
 import { Find } from './models/find.model';
 import { Follow } from './models/follow.model';
 import { Notification } from './models/notification.model';
+import { UserEvent } from './models/userEvent.model';
+import { InviteEvent } from './models/inviteEvent.model';
+import { ForumMessage } from './models/forumMessage.model';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LoggedUser } from './models/loggedUser.model';
 import { ConfiguredUser } from './models/configuredUser.model';
 import { ChangedPassword } from './models/changedPassword.model';
-import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +37,20 @@ export class UserService {
   private doIFollowListener = new Subject<Follow>();
 
   private usersMeFollowListener = new Subject<Follow[]>();
+  private usersIFollowListener = new Subject<Follow[]>();
 
   private notificationsListener = new Subject<Notification[]>();
+
+  private eventsListener = new Subject<UserEvent[]>();
+  private eventListener = new Subject<UserEvent>();
+
+  private invitationsListener = new Subject<InviteEvent[]>();
+  private invitationListener = new Subject<InviteEvent>();
+  private requestsListener = new Subject<InviteEvent[]>();
+  private requestListener = new Subject<InviteEvent>();
+  private notAcceptedInvitationListener = new Subject<InviteEvent>();
+
+  private forumMessagesListener = new Subject<ForumMessage[]>();
 
   getUserRegisterListener(){
     return this.userRegisterListener.asObservable();
@@ -90,8 +104,44 @@ export class UserService {
     return this.usersMeFollowListener.asObservable();
   }
 
+  getUsersIFollowListener(){
+    return this.usersIFollowListener.asObservable();
+  }
+
   getNotificationsListener(){
     return this.notificationsListener.asObservable();
+  }
+
+  getEventsListener(){
+    return this.eventsListener.asObservable();
+  }
+
+  getEventListener(){
+    return this.eventListener.asObservable();
+  }
+
+  getInvitationsListener(){
+    return this.invitationsListener.asObservable();
+  }
+
+  getInvitationListener(){
+    return this.invitationListener.asObservable();
+  }
+
+  getForumMessagesListener(){
+    return this.forumMessagesListener.asObservable();
+  }
+
+  getRequestListener(){
+    return this.requestListener.asObservable();
+  }
+
+  getRequestsListener(){
+    return this.requestsListener.asObservable();
+  }
+
+  getNotAcceptedInvitationListener(){
+    return this.notAcceptedInvitationListener.asObservable();
   }
 
   registerUser(firstname:string, lastname:string, username:string, password:string,
@@ -143,6 +193,8 @@ export class UserService {
         this.userLoginListener.next(response.message);
         this.isUserLoggedListener.next(loggedUser);
         this.getNotReadNotifications(loggedUser._id);
+        this.getAllInvitations(loggedUser._id);
+        this.getAllRequests(loggedUser._id);
         this.router.navigate(['/userInfo',response._id]);
       }, error => {
         this.userLoginListener.next(error.error.message);
@@ -230,6 +282,8 @@ export class UserService {
       this.newPasswordListener.next(response.message);
       this.isUserLoggedListener.next(loggedUser);
       this.getNotReadNotifications(loggedUser._id);
+      this.getAllInvitations(loggedUser._id);
+      this.getAllRequests(loggedUser._id);
       this.router.navigate(['/userInfo',response._id]);
     }, error => {
       this.newPasswordListener.next(error.error.message);
@@ -301,9 +355,9 @@ export class UserService {
     });
   }
 
-  followUser(idUser: number, whomFollows: number){
+  followUser(idUser: number, username: string, whomFollows: number, whomUsername: string){
     const data: Follow = {
-      _id:null, idUser: idUser, whomFollows: whomFollows
+      _id:null, idUser: idUser, username: username, whomFollows: whomFollows, whomUsername: whomUsername
     };
     this.http.post<{message:string}>('http://localhost:3000/api/user/followUser', data)
     .subscribe((responseData) => {
@@ -316,7 +370,7 @@ export class UserService {
 
   unfollowUser(idUser: number, whomFollows: number){
     const data: Follow = {
-      _id:null, idUser: idUser, whomFollows: whomFollows
+      _id:null, idUser: idUser, username: "", whomFollows: whomFollows, whomUsername: ""
     };
     this.http.post<{message:string}>('http://localhost:3000/api/user/unfollowUser', data)
     .subscribe((responseData) => {
@@ -329,7 +383,7 @@ export class UserService {
 
   doIFollow(idUser: number, whomFollows: number){
     const data: Follow = {
-      _id:null, idUser: idUser, whomFollows: whomFollows
+      _id:null, idUser: idUser, username: "", whomFollows: whomFollows, whomUsername: ""
     };
     this.http.post<{message:string, data: Follow}>('http://localhost:3000/api/user/doIFollow', data)
     .subscribe((responseData) => {
@@ -346,7 +400,7 @@ export class UserService {
   getAllUsersIFollow(id: number){
     this.http.get<{message:string, data: Follow[]}>('http://localhost:3000/api/user/getAllUsersIFollow/'+id)
       .subscribe((responseData) => {
-        console.log(responseData);
+        this.usersIFollowListener.next([...responseData.data]);
       });
   }
 
@@ -385,10 +439,226 @@ export class UserService {
   }
 
   markReadNotification(id: number) {
-    this.http.get<{message:StringMap}>('http://localhost:3000/api/user/markReadNotification/'+id)
+    this.http.get<{message:string}>('http://localhost:3000/api/user/markReadNotification/'+id)
       .subscribe((responseData) => {
         console.log(responseData.message);
         window.location.reload();
+      });
+  }
+
+  addPrivateEvent(idUser: number, username: string, title: string, dateBegin: Date, dateEnd: Date,
+     description: string, invitedUsers: number[]){
+      let nowDate: Date = new Date();
+      let status: string = "closed";
+      if(nowDate.getTime()>=dateBegin.getTime()){
+        if(dateEnd===null) status="active";
+        else if(nowDate.getTime()<=dateEnd.getTime()) status="active";
+        else status="closed";
+      }else if (nowDate.getTime()<dateBegin.getTime()) status="future";
+      const data: UserEvent = {
+        _id:null, idUser: idUser, username: username, title: title, dateBegin: dateBegin, dateEnd: dateEnd,
+        description: description, type: "private", status: status
+      };
+      this.http.post<{message:string, id: number}>('http://localhost:3000/api/user/addEvent', data)
+      .subscribe((responseData) => {
+        console.log(responseData.message + " " + responseData.id)
+        for(let i=0; i<invitedUsers.length; i++){
+          this.userInvite(responseData.id, idUser, username, invitedUsers[i], title)
+        }
+        window.location.reload();
+      }, error => {
+        console.log(error.error.message)
+      });
+    }
+
+  addPublicEvent(idUser: number, username: string, title: string, dateBegin: Date, dateEnd: Date, description: string){
+      let nowDate: Date = new Date();
+      let status: string = "closed";
+      if(nowDate.getTime()>=dateBegin.getTime()){
+        if(dateEnd===null) status="active";
+        else if(nowDate.getTime()<=dateEnd.getTime()) status="active";
+        else status="closed";
+      }else if (nowDate.getTime()<dateBegin.getTime()) status="future";
+      const data: UserEvent = {
+        _id:null, idUser: idUser, username: username, title: title, dateBegin: dateBegin, dateEnd: dateEnd,
+        description: description, type: "public", status: status
+      };
+      this.http.post<{message:string, id: number}>('http://localhost:3000/api/user/addEvent', data)
+      .subscribe((responseData) => {
+        window.location.reload();
+      }, error => {
+        console.log(error.error.message)
+      });
+  }
+
+  eventUpdate(id: number){
+    this.http.get<{message:string}>('http://localhost:3000/api/user/updateEvent/'+id)
+      .subscribe((responseData) => {
+        console.log(responseData.message)
+      });
+  }
+
+  getAllEvents(){
+    this.http.get<{message:string, data: any[]}>('http://localhost:3000/api/user/getAllEvents')
+      .subscribe((responseData) => {
+        for(let i=0;i<responseData.data.length;i++){
+          if(responseData.data[i].dateEnd==="0") responseData.data[i].dateEnd=null;
+        }
+        console.log(responseData)
+        this.eventsListener.next([...responseData.data])
+      });
+  }
+
+  getOneEvent(id: number){
+    this.http.get<{message:string, data: any}>('http://localhost:3000/api/user/getOneEvent/'+id)
+      .subscribe((responseData) => {
+        if(responseData.data.dateEnd==="0") responseData.data.dateEnd = null;
+        this.eventListener.next(responseData.data);
+      });
+  }
+
+  closeEvent(id: number){
+    this.http.get<{message:string}>('http://localhost:3000/api/user/closeEvent/'+id)
+      .subscribe((responseData) => {
+        console.log(responseData.message)
+        window.location.reload();
+      });
+  }
+
+  activeEvent(id: number){
+    this.http.get<{message:string}>('http://localhost:3000/api/user/activeEvent/'+id)
+      .subscribe((responseData) => {
+        console.log(responseData.message)
+        window.location.reload();
+      });
+  }
+
+  userInvite(idEvent: number, idHost: number, username: string, idGuest: number, title: string){
+    let text: string = "Korisnik " + username + " Vas poziva na desavanje " + title;
+    const data: InviteEvent = {
+      _id: null, idEvent: idEvent, idHost: idHost, idGuest: idGuest, text: text, hostInvitation:"1", userRequest:"0", status:"0"
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/user/inviteUserToEvent', data)
+    .subscribe((responseData) => {
+      console.log(responseData.message)
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  requestInvite(idEvent: number, idHost: number, username: string, idGuest: number, title: string){
+    let text: string = "Korisnik " + username + " zahteva prisustvo desavanju " + title;
+    const data: InviteEvent = {
+      _id: null, idEvent: idEvent, idHost: idHost, idGuest: idGuest, text: text, hostInvitation:"0", userRequest:"1", status:"0"
+    };
+    this.http.post<{message:string}>('http://localhost:3000/api/user/requestInvite', data)
+    .subscribe((responseData) => {
+      console.log(responseData.message)
+      window.location.reload();
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  getRequest(idGuest: number, idEvent: number){
+    const data: InviteEvent = {
+      _id: null, idEvent: idEvent, idHost: null, idGuest: idGuest, text: "", hostInvitation:"", userRequest:"", status:""
+    };
+    this.http.post<{message:string, data: InviteEvent}>('http://localhost:3000/api/user/getRequest', data)
+    .subscribe((responseData) => {
+      if(responseData.data){
+        this.requestListener.next({...responseData.data});
+      }else{
+        this.requestListener.next(null);
+      }
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  getAllRequests(id: number){
+    this.http.get<{message:string, data: InviteEvent[]}>('http://localhost:3000/api/user/getAllRequests/'+id)
+      .subscribe((responseData) => {
+        console.log(responseData)
+        this.requestsListener.next([...responseData.data])
+      });
+  }
+
+
+  getAllInvitations(id: number){
+    this.http.get<{message:string, data: InviteEvent[]}>('http://localhost:3000/api/user/getAllInvitations/'+id)
+      .subscribe((responseData) => {
+        console.log(responseData)
+        this.invitationsListener.next([...responseData.data])
+      });
+  }
+
+  getInvitation(idGuest: number, idEvent: number){
+    const data: InviteEvent = {
+      _id: null, idEvent: idEvent, idHost: null, idGuest: idGuest, text: "", hostInvitation:"", userRequest:"", status:""
+    };
+    this.http.post<{message:string, data: InviteEvent}>('http://localhost:3000/api/user/getInvitation', data)
+    .subscribe((responseData) => {
+      if(responseData.data){
+        this.invitationListener.next({...responseData.data});
+      }else{
+        this.invitationListener.next(null);
+      }
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  getNotAcceptedInvitation(idGuest: number, idEvent: number){
+    const data: InviteEvent = {
+      _id: null, idEvent: idEvent, idHost: null, idGuest: idGuest, text: "", hostInvitation:"", userRequest:"", status:""
+    };
+    this.http.post<{message:string, data: InviteEvent}>('http://localhost:3000/api/user/getNotAcceptedInvitation', data)
+    .subscribe((responseData) => {
+      if(responseData.data){
+        this.notAcceptedInvitationListener.next({...responseData.data});
+      }else{
+        this.notAcceptedInvitationListener.next(null);
+      }
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  acceptInvitation(id: number){
+    this.http.get<{message:string}>('http://localhost:3000/api/user/acceptInvitation/'+id)
+      .subscribe((responseData) => {
+        console.log(responseData.message)
+        window.location.reload();
+      });
+  }
+
+  refuseInvitation(id:number){
+    this.http.delete<{message:string}>('http://localhost:3000/api/user/refuseInvitation/'+id)
+    .subscribe(responseData => {
+      console.log(responseData.message);
+      window.location.reload();
+    });
+  }
+
+  addForumMessage(idUser: number, username: string, idEvent: number, message: string){
+    const data : ForumMessage = {
+      _id: null, idUser: idUser, username: username, idEvent: idEvent, message: message
+    }
+    this.http.post<{message:string}>('http://localhost:3000/api/user/addForumMessage', data)
+    .subscribe((responseData) => {
+      console.log(responseData.message)
+      window.location.reload();
+    }, error => {
+      console.log(error.error.message)
+    });
+  }
+
+  getForumMessages(id: number){
+    this.http.get<{message:string, data: ForumMessage[]}>('http://localhost:3000/api/user/getForumMessages/'+id)
+      .subscribe((responseData) => {
+        console.log(responseData.data)
+        this.forumMessagesListener.next([...responseData.data])
       });
   }
 
