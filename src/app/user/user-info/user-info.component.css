@@ -68,5 +68,13 @@ a {
 }
 
 .mat-column-title {
-    flex: 0 0 40%;
+    flex: 0 0 25%;
+}
+
+.mat-column-authors {
+    flex: 0 0 25%;
+}
+
+.mat-column-mark {
+    flex: 0 0 5%;
 }

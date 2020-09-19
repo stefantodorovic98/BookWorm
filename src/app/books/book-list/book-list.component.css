@@ -36,3 +36,7 @@ mat-form-field {
 .mat-column-genres {
     flex: 0 0 25%;
 }
+
+.mat-column-title {
+    flex: 0 0 25%;
+}

@@ -43,7 +43,7 @@ export class PrivateEventAddComponent implements OnInit, OnDestroy {
       description: new FormControl(null,[Validators.required])
     });
     this.fifthFormGroup = new FormGroup({
-      invite: new FormControl(null,[Validators.required])
+      invite: new FormControl(null)
     });
 
     this.loggedUser = this.userService.whoIsLogged();

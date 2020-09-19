@@ -22,3 +22,7 @@ mat-form-field {
 .mat-column-description {
     flex: 0 0 30%;
 }
+
+.mat-column-title {
+    flex: 0 0 15%;
+}
