@@ -105,6 +105,7 @@ router.post("/signupNoImage", (req, res, next) => {
         const path = "backend/images/profileImages/" + name;
         fs.copyFileSync("backend/images/profileGenericImage/profile.png", path);
         const url = req.protocol + "://" + req.get("host");
+        let date = new Date(req.body.birthdate);
         let dateString = new String(date.toLocaleDateString());
         let arr = dateString.split('-');
         let newDateString = arr[2] + '.' + arr[1] + '.' + arr[0];
@@ -146,6 +147,7 @@ router.post("/signupNoImage", (req, res, next) => {
         const path = "backend/images/profileImages/" + name;
         fs.copyFileSync("backend/images/profileGenericImage/profile.png", path);
         const url = req.protocol + "://" + req.get("host");
+        let date = new Date(req.body.birthdate);
         let dateString = new String(date.toLocaleDateString());
         let arr = dateString.split('-');
         let newDateString = arr[2] + '.' + arr[1] + '.' + arr[0];
